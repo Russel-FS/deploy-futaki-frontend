@@ -9,21 +9,19 @@ export const ProductGrid: React.FC = () => {
   return (
     <section id="catalog" className="py-24 bg-background">
       <Container>
-        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-          <div className="max-w-xl">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
-              Catálogo Seleccionado.
-            </h2>
-            <p className="text-secondary text-lg">
-              Una colección de herramientas diseñadas para elevar tu día a día. Encuentra el equilibrio perfecto entre estética y funcionalidad.
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div className="max-w-2xl">
+            <span className="text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">Catálogo Seleccionado</span>
+            <h2 className="text-4xl md:text-5xl font-black uppercase tracking-tighter mb-4">Lo más vendido de la semana</h2>
+            <p className="text-secondary font-medium md:text-lg">
+              Equipos de alto rendimiento seleccionados cuidadosamente por nuestros expertos.
             </p>
           </div>
-          <div className="flex gap-4">
-             {/* Filtros o categorías si se desea */}
-          </div>
+          <button className="bg-foreground text-background px-8 py-4 rounded-2xl text-xs font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all">
+            Ver catálogo completo
+          </button>
         </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {MOCK_PRODUCTS.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}

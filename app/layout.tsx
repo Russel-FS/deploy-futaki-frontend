@@ -13,10 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 import { ThemeProvider } from "@/shared/lib/theme-context";
+import { COMPANY_CONFIG } from "@/core/config/company.config";
 
 export const metadata: Metadata = {
-  title: "Futeki | Tecnología Inspirada",
-  description: "Landing page profesional de Futeki con catálogo de productos y blog informativo.",
+  title: `${COMPANY_CONFIG.name} | ${COMPANY_CONFIG.tagline}`,
+  description: COMPANY_CONFIG.description,
 };
 
 export default function RootLayout({

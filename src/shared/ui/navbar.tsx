@@ -5,48 +5,46 @@ import { Container } from "./container";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ThemeToggle } from "./theme-toggle";
+import { TopBar } from "./top-bar";
+import { SearchBar } from "./search-bar";
+import { Menu } from "lucide-react";
+import { COMPANY_CONFIG } from "@/core/config/company.config";
 
 export const Navbar: React.FC = () => {
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50"
-    >
-      <Container className="h-16 flex items-center justify-between">
-        <Link
-          href="/"
-          className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity"
-        >
-          Futeki
-        </Link>
-        <div className="hidden md:flex items-center gap-8">
-          <Link
-            href="#catalog"
-            className="text-sm font-medium text-secondary hover:text-foreground transition-colors"
-          >
-            Catálogo
-          </Link>
-          <Link
-            href="#blog"
-            className="text-sm font-medium text-secondary hover:text-foreground transition-colors"
-          >
-            Blog
-          </Link>
-          <Link
-            href="#about"
-            className="text-sm font-medium text-secondary hover:text-foreground transition-colors"
-          >
-            Nosotros
-          </Link>
-        </div>
-        <div className="flex items-center gap-4">
-          <ThemeToggle />
-          <button className="text-sm font-medium hover:opacity-80">
-            Contacto
-          </button>
-        </div>
-      </Container>
-    </motion.nav>
+    <>
+      <TopBar />
+      <motion.nav
+        initial={{ y: -100 }}
+        animate={{ y: 0 }}
+        className="sticky top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50"
+      >
+        <Container className="h-16 md:h-18 flex items-center justify-between gap-8">
+          <div className="flex items-center gap-6">
+            <Link
+              href="/"
+              className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity"
+            >
+              {COMPANY_CONFIG.name}
+            </Link>
+          </div>
+
+          <SearchBar />
+
+          <div className="flex items-center gap-8">
+            <nav className="hidden lg:flex items-center gap-8 text-[13px] font-medium text-secondary">
+              <Link href="#catalog" className="hover:text-foreground transition-colors">Tienda</Link>
+              <Link href="#blog" className="hover:text-foreground transition-colors">Blog</Link>
+            </nav>
+            <div className="flex items-center gap-4 border-l border-border pl-8">
+              <ThemeToggle />
+              <button className="bg-foreground text-background px-5 py-2 rounded-full text-[13px] font-semibold hover:opacity-90 transition-opacity">
+                Contacto
+              </button>
+            </div>
+          </div>
+        </Container>
+      </motion.nav>
+    </>
   );
 };

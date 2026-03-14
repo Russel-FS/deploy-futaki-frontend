@@ -1,4 +1,4 @@
-import React from "react";
+import { COMPANY_CONFIG } from "@/core/config/company.config";
 import { Container } from "@/shared/ui/container";
 
 export const Footer: React.FC = () => {
@@ -7,9 +7,9 @@ export const Footer: React.FC = () => {
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <h2 className="text-2xl font-bold mb-6">Futeki</h2>
+            <h2 className="text-2xl font-bold mb-6">{COMPANY_CONFIG.name}</h2>
             <p className="text-secondary max-w-sm">
-              Trascendiendo los límites de la tecnología funcional para crear experiencias extraordinarias. Elegancia en cada código, minimalismo en cada píxel.
+              {COMPANY_CONFIG.description}
             </p>
           </div>
           <div>
@@ -31,9 +31,9 @@ export const Footer: React.FC = () => {
           </div>
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-border/20 text-xs text-secondary/60">
-          <p>© 2026 Futeki Corporation. Todos los derechos reservados.</p>
+          <p>© {new Date().getFullYear()} {COMPANY_CONFIG.fullName}. Todos los derechos reservados.</p>
           <div className="flex gap-6 mt-4 md:mt-0">
-            <span>Perú</span>
+            <span>{COMPANY_CONFIG.contact.address.split(',')[0]}</span>
             <span>Global</span>
           </div>
         </div>

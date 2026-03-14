@@ -1,14 +1,18 @@
 import { Navbar } from "@/shared/ui/navbar";
-import { Hero } from "@/core/presentation/hero";
+import { HeroCarousel } from "@/core/presentation/hero-carousel";
 import { ProductGrid } from "@/catalog/presentation/product-grid";
 import { BlogSection } from "@/blog/presentation/blog-section";
 import { Footer } from "@/core/presentation/footer";
+import { InfoStrip } from "@/core/presentation/info-strip";
+import { CategoryGrid } from "@/catalog/presentation/category-grid";
+import { WhatsAppFloatingButton } from "@/shared/ui/whatsapp-floating";
 
-export default function Home() {
+export default function LandingPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-background text-foreground">
       <Navbar />
-      <Hero />
+      <HeroCarousel />
+      <CategoryGrid />
       
       {/* Sección de Catálogo */}
       <ProductGrid />
@@ -18,6 +22,7 @@ export default function Home() {
       
       {/* Pie de página */}
       <Footer />
+      <WhatsAppFloatingButton />
     </main>
   );
 }
