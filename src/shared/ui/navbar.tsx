@@ -9,6 +9,7 @@ import { TopBar } from "./top-bar";
 import { SearchBar } from "./search-bar";
 import { Menu } from "lucide-react";
 import { COMPANY_CONFIG } from "@/core/config/company.config";
+import FutakiLogo from "./futaki-logo";
 
 export const Navbar: React.FC = () => {
   return (
@@ -25,11 +26,7 @@ export const Navbar: React.FC = () => {
               href="/"
               className="hover:opacity-80 transition-opacity"
             >
-              <img 
-                src={COMPANY_CONFIG.logo} 
-                alt={COMPANY_CONFIG.name} 
-                className="h-8 md:h-10 w-auto"
-              />
+              <FutakiLogo className="h-8 md:h-10 w-auto" />
             </Link>
           </div>
 

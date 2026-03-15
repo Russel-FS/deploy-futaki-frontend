@@ -1,5 +1,7 @@
 import { COMPANY_CONFIG } from "@/core/config/company.config";
 import { Container } from "@/shared/ui/container";
+import FutakiLogo from "@/shared/ui/futaki-logo";
+import React from "react";
 
 export const Footer: React.FC = () => {
   return (
@@ -7,11 +9,7 @@ export const Footer: React.FC = () => {
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <img 
-              src={COMPANY_CONFIG.logo} 
-              alt={COMPANY_CONFIG.name} 
-              className="h-10 md:h-12 w-auto mb-6"
-            />
+            <FutakiLogo className="h-10 md:h-12 w-auto mb-6" />
             <p className="text-secondary max-w-sm">
               {COMPANY_CONFIG.description}
             </p>
