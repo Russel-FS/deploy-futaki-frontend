@@ -7,7 +7,11 @@ export const Footer: React.FC = () => {
       <Container>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <h2 className="text-2xl font-bold mb-6">{COMPANY_CONFIG.name}</h2>
+            <img 
+              src={COMPANY_CONFIG.logo} 
+              alt={COMPANY_CONFIG.name} 
+              className="h-10 md:h-12 w-auto mb-6"
+            />
             <p className="text-secondary max-w-sm">
               {COMPANY_CONFIG.description}
             </p>

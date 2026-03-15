@@ -1,5 +1,6 @@
 export const COMPANY_CONFIG = {
   name: "Futeki",
+  logo: "/futeki.svg",
   fullName: "Futeki Technology",
   tagline: "Tecnología Inspirada",
   description: "Landing page profesional de Futeki con catálogo de productos y blog informativo.",

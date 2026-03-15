@@ -23,9 +23,13 @@ export const Navbar: React.FC = () => {
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="text-xl font-bold tracking-tight hover:opacity-80 transition-opacity"
+              className="hover:opacity-80 transition-opacity"
             >
-              {COMPANY_CONFIG.name}
+              <img 
+                src={COMPANY_CONFIG.logo} 
+                alt={COMPANY_CONFIG.name} 
+                className="h-8 md:h-10 w-auto"
+              />
             </Link>
           </div>
 
