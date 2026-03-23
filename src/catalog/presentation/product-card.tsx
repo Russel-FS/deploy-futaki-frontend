@@ -5,6 +5,7 @@ import { Product } from "../infrastructure/mock-products";
 import { motion } from "framer-motion";
 import { WhatsAppIcon } from "@/shared/ui/whatsapp-icon";
 import { COMPANY_CONFIG } from "@/core/config/company.config";
+import Link from "next/link";
 
 interface ProductCardProps {
   product: Product;
@@ -24,7 +25,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       viewport={{ once: true }}
       className="group bg-background rounded-3xl p-4 transition-all duration-300 hover:shadow-xl border border-transparent hover:border-border/40 flex flex-col h-full"
     >
-      <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#f5f5f7] dark:bg-accent/30 mb-6">
+      <Link href={`/products/${product.id}`} className="block relative aspect-square overflow-hidden rounded-2xl bg-[#f5f5f7] dark:bg-accent/30 mb-6">
         <img
           src={product.image}
           alt={product.name}
@@ -35,13 +36,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             Últimas unidades
           </span>
         )}
-      </div>
+      </Link>
 
       <div className="flex flex-col grow px-2">
         <div className="flex justify-between items-start mb-2">
-          <h3 className="text-lg font-semibold tracking-tight text-foreground/90 group-hover:text-primary transition-colors">
-            {product.name}
-          </h3>
+          <Link href={`/products/${product.id}`}>
+            <h3 className="text-lg font-semibold tracking-tight text-foreground/90 group-hover:text-primary transition-colors cursor-pointer">
+              {product.name}
+            </h3>
+          </Link>
           <span className="text-sm font-bold">{product.price}</span>
         </div>
         
