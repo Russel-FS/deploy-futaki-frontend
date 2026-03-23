@@ -13,16 +13,15 @@ export default function LandingPage() {
       <Navbar />
       <HeroCarousel />
       <CategoryGrid />
-      
+
       {/* Sección de Catálogo */}
       <ProductGrid />
-      
+
       {/* Sección de Blog/Contenido */}
       <BlogSection />
-      
+
       {/* Pie de página */}
       <Footer />
-      <WhatsAppFloatingButton />
     </main>
   );
 }

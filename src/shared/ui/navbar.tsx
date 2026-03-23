@@ -34,12 +34,12 @@ export const Navbar: React.FC = () => {
 
           <div className="flex items-center gap-8">
             <nav className="hidden lg:flex items-center gap-8 text-[13px] font-medium text-secondary">
-              <Link href="#catalog" className="hover:text-foreground transition-colors">Tienda</Link>
-              <Link href="#blog" className="hover:text-foreground transition-colors">Blog</Link>
+              <Link href="#catalog" className="hover:text-primary transition-colors">Tienda</Link>
+              <Link href="#blog" className="hover:text-primary transition-colors">Blog</Link>
             </nav>
             <div className="flex items-center gap-4 border-l border-border pl-8">
               <ThemeToggle />
-              <button className="bg-foreground text-background px-5 py-2 rounded-full text-[13px] font-semibold hover:opacity-90 transition-opacity">
+              <button className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-[13px] font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
                 Contacto
               </button>
             </div>

@@ -53,9 +53,11 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.6 }}
             >
-              <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider rounded-full mb-6">
-                {product.category}
-              </span>
+              <div className="flex items-center gap-2 mb-6">
+                <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full">
+                  {product.category}
+                </span>
+              </div>
               <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground mb-4 leading-tight">
                 {product.name}
               </h1>
@@ -131,7 +133,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
         </div>
         <div
           id="full-specs"
-          className="mt-32 pt-24 border-t border-border/40 pb-40"
+          className="mt-32 pt-24 border-t border-primary/20 pb-40"
         >
           <div className="max-w-4xl mx-auto px-6">
             <h2 className="text-4xl font-extrabold tracking-tight text-foreground mb-20 text-center">
@@ -141,7 +143,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
             <div className="space-y-16">
               {/* Hardware Group */}
               <section>
-                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-secondary/50 mb-8 pb-2 border-b border-border/40">
+                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-primary/50 mb-8 pb-2 border-b border-primary/20">
                   Configuración de Hardware
                 </h3>
                 <div className="flex flex-col">

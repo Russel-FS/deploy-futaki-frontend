@@ -10,26 +10,30 @@ const SLIDES = [
     id: 1,
     title: "Innovación en tus manos",
     subtitle: "Descubre la nueva generación de MacBook Pro con chip M3 Max.",
-    image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1600&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1600&auto=format&fit=crop",
     cta: "Explorar MacBook",
-    color: "bg-blue-600"
+    color: "bg-blue-600",
   },
   {
     id: 2,
     title: "El futuro es Titanium",
-    subtitle: "iPhone 15 Pro. El primer iPhone con diseño de titanio aeroespacial.",
-    image: "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=1600&auto=format&fit=crop",
+    subtitle:
+      "iPhone 15 Pro. El primer iPhone con diseño de titanio aeroespacial.",
+    image:
+      "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=1600&auto=format&fit=crop",
     cta: "Ver iPhone",
-    color: "bg-zinc-800"
+    color: "bg-zinc-800",
   },
   {
     id: 3,
     title: "Gaming sin límites",
     subtitle: "Las mejores laptops gamer del mundo están aquí.",
-    image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=1600&auto=format&fit=crop",
+    image:
+      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=1600&auto=format&fit=crop",
     cta: "Ver Gaming",
-    color: "bg-purple-600"
-  }
+    color: "bg-purple-600",
+  },
 ];
 
 export const HeroCarousel: React.FC = () => {
@@ -43,10 +47,11 @@ export const HeroCarousel: React.FC = () => {
   }, []);
 
   const next = () => setCurrent((prev) => (prev + 1) % SLIDES.length);
-  const prev = () => setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+  const prev = () =>
+    setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
 
   return (
-    <div className="relative h-[500px] md:h-[80vh] w-full overflow-hidden bg-black">
+    <div className="relative h-[500px] md:h-[85vh] w-full overflow-hidden bg-black">
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
@@ -62,7 +67,7 @@ export const HeroCarousel: React.FC = () => {
             alt={SLIDES[current].title}
             className="w-full h-full object-cover scale-105"
           />
-          
+
           <Container className="absolute inset-0 z-20 flex flex-col justify-center">
             <motion.div
               initial={{ x: -100, opacity: 0 }}
@@ -76,7 +81,9 @@ export const HeroCarousel: React.FC = () => {
               <p className="text-lg md:text-xl text-zinc-300 mb-10 font-medium">
                 {SLIDES[current].subtitle}
               </p>
-              <button className={`${SLIDES[current].color} text-white px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl`}>
+              <button
+                className={`${SLIDES[current].color} text-white px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl`}
+              >
                 {SLIDES[current].cta}
               </button>
             </motion.div>
@@ -86,10 +93,16 @@ export const HeroCarousel: React.FC = () => {
 
       {/* Controls */}
       <div className="absolute bottom-10 right-10 z-30 flex gap-4">
-        <button onClick={prev} className="p-4 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all">
+        <button
+          onClick={prev}
+          className="p-4 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
+        >
           <ChevronLeft className="w-6 h-6" />
         </button>
-        <button onClick={next} className="p-4 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all">
+        <button
+          onClick={next}
+          className="p-4 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
+        >
           <ChevronRight className="w-6 h-6" />
         </button>
       </div>

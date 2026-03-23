@@ -7,9 +7,7 @@ import { COMPANY_CONFIG } from "@/core/config/company.config";
 
 export const WhatsAppFloatingButton: React.FC = () => {
   const whatsappNumber = COMPANY_CONFIG.contact.whatsapp;
-  const message = encodeURIComponent(
-    COMPANY_CONFIG.whatsappMessages.default,
-  );
+  const message = encodeURIComponent(COMPANY_CONFIG.whatsappMessages.default);
   const url = `https://wa.me/${whatsappNumber}?text=${message}`;
 
   return (
@@ -21,7 +19,7 @@ export const WhatsAppFloatingButton: React.FC = () => {
       animate={{ scale: 1, opacity: 1 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-8 right-8 z-100 bg-[#25D366] text-white p-4 rounded-full shadow-2xl flex items-center justify-center group"
+      className="fixed bottom-8 right-8 z-100 bg-[#25D366] text-white p-3 rounded-full shadow-2xl flex items-center justify-center group"
     >
       <div className="absolute -top-12 right-0 bg-background border border-border px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-lg text-foreground">
         ¡Hola! ¿En qué podemos ayudarte?
