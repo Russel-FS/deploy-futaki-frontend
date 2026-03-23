@@ -70,7 +70,7 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                 />
                 <span className="text-sm font-semibold text-foreground/70 tracking-tight">
                   {product.stock > 0
-                    ? `En stock (${product.stock} unidades listas para envío)`
+                    ? `En stock (${product.stock} unidades)`
                     : "Agotado temporalmente"}
                 </span>
               </div>
