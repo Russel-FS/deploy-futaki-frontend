@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { B2StorageService } from "@/shared/infrastructure/storage/b2-storage.service";
+import { B2StorageService } from "@/shared/services/b2-storage.service";
+import sharp from "sharp";
 
 const storageService = new B2StorageService();
 
@@ -18,10 +19,21 @@ export async function POST(request: Request) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
+    // Redimensionar máximo 1200px de ancho
+    // Convertir a WebP calidad 80%
+    const optimizedBuffer = await sharp(buffer)
+      .resize({ width: 1200, withoutEnlargement: true })
+      .webp({ quality: 80 })
+      .toBuffer();
+
+    // Cambiar el nombre del archivo para que tenga extensión .webp
+    const originalName = file.name.split(".").slice(0, -1).join(".");
+    const optimizedName = `${originalName || "image"}.webp`;
+
     const imageUrl = await storageService.uploadFile(
-      buffer,
-      file.name,
-      file.type,
+      optimizedBuffer,
+      optimizedName,
+      "image/webp",
     );
 
     return NextResponse.json({ url: imageUrl });
