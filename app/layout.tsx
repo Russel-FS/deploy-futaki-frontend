@@ -12,9 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-import { ThemeProvider } from "@/shared/lib/theme-context";
 import { COMPANY_CONFIG } from "@/core/config/company.config";
-import { PaletteSwitcher } from "@/shared/ui/palette-switcher";
 import { WhatsAppFloatingButton } from "@/shared/ui/whatsapp-floating";
 
 export const metadata: Metadata = {
@@ -30,11 +28,8 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className="antialiased font-sans">
-        <ThemeProvider>
           {children}
-          <PaletteSwitcher />
           <WhatsAppFloatingButton />
-        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { useTheme } from "@/shared/lib/theme-context";
 
 interface FutakiLogoProps extends React.SVGProps<SVGSVGElement> {
   className?: string;

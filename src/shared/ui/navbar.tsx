@@ -4,7 +4,6 @@ import React from "react";
 import { Container } from "./container";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ThemeToggle } from "./theme-toggle";
 import { TopBar } from "./top-bar";
 import { SearchBar } from "./search-bar";
 import { Menu } from "lucide-react";
@@ -38,7 +37,6 @@ export const Navbar: React.FC = () => {
               <Link href="#blog" className="hover:text-primary transition-colors">Blog</Link>
             </nav>
             <div className="flex items-center gap-4 border-l border-border pl-8">
-              <ThemeToggle />
               <button className="bg-primary text-primary-foreground px-5 py-2 rounded-full text-[13px] font-bold hover:opacity-90 transition-opacity whitespace-nowrap">
                 Contacto
               </button>
