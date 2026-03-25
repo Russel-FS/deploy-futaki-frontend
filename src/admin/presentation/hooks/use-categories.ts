@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
-interface Category {
+export interface Category {
   id: string;
   name: string;
   description?: string;
+  imageUrl?: string;
 }
 
 export const useCategories = () => {

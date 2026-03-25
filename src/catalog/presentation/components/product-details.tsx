@@ -187,15 +187,6 @@ export const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
                           </div>
                         </div>
                       ))}
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 py-8 border-b border-border/10 last:border-0">
-                        <div className="text-lg font-bold text-foreground mb-2 md:mb-0">
-                          Condición
-                        </div>
-                        <div className="text-lg text-secondary/80 font-medium">
-                          Nuevo, sellado en caja original
-                        </div>
-                      </div>
                     </div>
                   </section>
                 </div>
