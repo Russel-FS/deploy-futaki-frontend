@@ -3,6 +3,7 @@
 import React from "react";
 import { AdminSidebar } from "@/admin/presentation/components/admin-sidebar";
 import { motion, AnimatePresence } from "framer-motion";
+import { Toaster } from "@/shared/ui/toast";
 
 export default function AdminLayout({
   children,
@@ -10,7 +11,8 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-system-gray-6   text-foreground font-sans">
+    <div className="flex min-h-screen bg-system-gray-6 text-foreground font-sans">
+      <Toaster />
       <AdminSidebar />
       <main className="flex-1 relative overflow-y-auto w-full">
         <AnimatePresence mode="wait">
