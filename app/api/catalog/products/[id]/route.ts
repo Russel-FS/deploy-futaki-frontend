@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
 import { PrismaCatalogRepository } from "@/catalog/infrastructure/repositories/prisma-catalog.repository";
-import { GetProductByIdUseCase } from "@/catalog/application/use-cases/catalog.use-cases";
+import {
+  GetProductByIdUseCase,
+  UpdateProductUseCase,
+} from "@/catalog/application/use-cases/catalog.use-cases";
 
 const repository = new PrismaCatalogRepository();
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const { id } = await params;
@@ -14,12 +17,37 @@ export async function GET(
     const product = await useCase.execute(id);
 
     if (!product) {
-      return NextResponse.json({ error: "Producto no encontrado" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Producto no encontrado" },
+        { status: 404 },
+      );
     }
 
     return NextResponse.json(product);
   } catch (error) {
     console.error("Error al obtener el producto:", error);
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PUT(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
+  try {
+    const { id } = await params;
+    const data = await request.json();
+    const useCase = new UpdateProductUseCase(repository);
+    const product = await useCase.execute(id, data);
+    return NextResponse.json(product);
+  } catch (error) {
+    console.error("Error al actualizar el producto:", error);
+    return NextResponse.json(
+      { error: "Error interno del servidor" },
+      { status: 500 },
+    );
   }
 }

@@ -17,6 +17,7 @@ import { useCategories } from "../hooks/use-categories";
 import { cn } from "@/shared/lib/utils";
 import { Input, TextArea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
+import { toast } from "@/shared/ui/toast";
 
 interface ProductFormProps {
   onSuccess: () => void;
@@ -77,7 +78,15 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["products"] });
       queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      toast.success(
+        initialData
+          ? "Producto actualizado correctamente."
+          : "Producto registrado correctamente.",
+      );
       onSuccess();
+    },
+    onError: () => {
+      toast.error("Ocurrió un error. Por favor inténtalo de nuevo.");
     },
   });
 

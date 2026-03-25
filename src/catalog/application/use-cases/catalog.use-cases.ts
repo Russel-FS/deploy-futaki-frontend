@@ -35,3 +35,17 @@ export class CreateCategoryUseCase {
     return this.catalogRepository.createCategory(data);
   }
 }
+
+export class UpdateCategoryUseCase {
+  constructor(private repository: ICatalogRepository) {}
+  async execute(id: string, data: any): Promise<Category> {
+    return this.repository.updateCategory(id, data);
+  }
+}
+
+export class UpdateProductUseCase {
+  constructor(private repository: ICatalogRepository) {}
+  async execute(id: string, data: any): Promise<Product> {
+    return this.repository.updateProduct(id, data);
+  }
+}

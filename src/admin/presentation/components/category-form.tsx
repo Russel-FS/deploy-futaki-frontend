@@ -6,6 +6,7 @@ import { Upload, X, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Input, TextArea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
+import { toast } from "@/shared/ui/toast";
 
 interface CategoryFormProps {
   onSuccess: () => void;
@@ -56,7 +57,15 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
       queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      toast.success(
+        initialData
+          ? "Categoría actualizada correctamente."
+          : "Categoría creada correctamente.",
+      );
       onSuccess();
+    },
+    onError: () => {
+      toast.error("Ocurrió un error. Por favor inténtalo de nuevo.");
     },
   });
 

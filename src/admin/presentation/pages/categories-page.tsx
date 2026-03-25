@@ -13,6 +13,7 @@ import { useCategories } from "../hooks/use-categories";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button";
+import { CategoryRowSkeleton } from "@/shared/ui/skeleton";
 
 export const CategoriesPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,7 +32,7 @@ export const CategoriesPageContent = () => {
 
   if (error) {
     return (
-      <div className="p-12 text-center bg-red-50  rounded-3xl border border-red-200  text-red-600 s font-bold">
+      <div className="p-12 text-center bg-red-50 rounded-3xl border border-red-200 text-red-600 font-bold">
         Error al cargar las categorías del sistema.
       </div>
     );
@@ -90,16 +91,7 @@ export const CategoriesPageContent = () => {
             <tbody className="divide-y divide-border/10">
               <AnimatePresence>
                 {isLoading ? (
-                  <tr>
-                    <td colSpan={4} className="px-8 py-20 text-center">
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-                        <span className="text-secondary/40 font-black text-[10px] tracking-widest uppercase italic">
-                          Sincronizando...
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
+                  <CategoryRowSkeleton rows={5} />
                 ) : categories.length === 0 ? (
                   <tr>
                     <td

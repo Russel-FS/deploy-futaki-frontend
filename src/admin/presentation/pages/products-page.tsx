@@ -7,6 +7,7 @@ import { ProductForm } from "../components/product-form";
 import { useProducts } from "../hooks/use-products";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/ui/button";
+import { ProductRowSkeleton } from "@/shared/ui/skeleton";
 
 export const ProductsPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -85,16 +86,7 @@ export const ProductsPageContent = () => {
             <tbody className="divide-y divide-border/10">
               <AnimatePresence>
                 {isLoading ? (
-                  <tr>
-                    <td colSpan={5} className="px-8 py-20 text-center">
-                      <div className="flex flex-col items-center gap-4">
-                        <div className="w-8 h-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
-                        <span className="text-secondary/40 font-black text-[10px] tracking-widest uppercase italic">
-                          Cargando catálogo...
-                        </span>
-                      </div>
-                    </td>
-                  </tr>
+                  <ProductRowSkeleton rows={6} />
                 ) : products.length === 0 ? (
                   <tr>
                     <td
