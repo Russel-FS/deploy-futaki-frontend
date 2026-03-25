@@ -16,9 +16,16 @@ export class GetCategoriesUseCase {
 }
 
 export class CreateProductUseCase {
-  constructor(private catalogRepository: ICatalogRepository) {}
+  constructor(private repository: ICatalogRepository) {}
   async execute(data: any): Promise<Product> {
-    return this.catalogRepository.createProduct(data);
+    return this.repository.createProduct(data);
+  }
+}
+
+export class GetProductByIdUseCase {
+  constructor(private repository: ICatalogRepository) {}
+  async execute(id: string): Promise<Product | null> {
+    return this.repository.getProductById(id);
   }
 }
 

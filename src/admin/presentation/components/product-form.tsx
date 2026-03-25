@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ImagePlus, X, Package, Loader2 } from "lucide-react";
+import { ImagePlus, X, Package, Loader2, Plus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useCategories } from "../hooks/use-categories";
 
@@ -19,6 +19,7 @@ export const ProductForm = ({ onSuccess }: ProductFormProps) => {
     stock: "",
     categoryId: "",
   });
+  const [specs, setSpecs] = useState<{ label: string; value: string }[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
@@ -46,6 +47,7 @@ export const ProductForm = ({ onSuccess }: ProductFormProps) => {
           price: parseFloat(data.price),
           stock: parseInt(data.stock),
           imageUrl,
+          specs,
         }),
         headers: { "Content-Type": "application/json" },
       }).then((res) => res.json());
@@ -56,6 +58,20 @@ export const ProductForm = ({ onSuccess }: ProductFormProps) => {
       onSuccess();
     },
   });
+
+  const handleAddSpec = () => {
+    setSpecs([...specs, { label: "", value: "" }]);
+  };
+
+  const handleRemoveSpec = (index: number) => {
+    setSpecs(specs.filter((_, i) => i !== index));
+  };
+
+  const handleSpecChange = (index: number, field: "label" | "value", val: string) => {
+    const newSpecs = [...specs];
+    newSpecs[index][field] = val;
+    setSpecs(newSpecs);
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -208,6 +224,53 @@ export const ProductForm = ({ onSuccess }: ProductFormProps) => {
             }
             className="w-full bg-white border border-border/50 rounded-xl py-2.5 px-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all font-medium min-h-[80px]"
           />
+        </div>
+
+        <div className="space-y-3 col-span-2 pt-4 border-t border-border/20">
+          <div className="flex justify-between items-center">
+            <label className="text-sm font-bold text-secondary">
+              Especificaciones Técnicas
+            </label>
+            <button
+              type="button"
+              onClick={handleAddSpec}
+              className="text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/5 px-2 py-1 rounded-lg transition-colors flex items-center gap-1"
+            >
+              <Plus size={12} />
+              Añadir Atributo
+            </button>
+          </div>
+          
+          <div className="space-y-2">
+            {specs.map((spec, index) => (
+              <div key={index} className="flex gap-2 items-center slide-in">
+                <input
+                  placeholder="Ej: Procesador"
+                  value={spec.label}
+                  onChange={(e) => handleSpecChange(index, "label", e.target.value)}
+                  className="flex-1 bg-accent/30 border border-border/30 rounded-lg py-2 px-3 text-xs font-medium focus:ring-2 focus:ring-primary/10 transition-all"
+                />
+                <input
+                  placeholder="Ej: Apple M3"
+                  value={spec.value}
+                  onChange={(e) => handleSpecChange(index, "value", e.target.value)}
+                  className="flex-2 bg-accent/30 border border-border/30 rounded-lg py-2 px-3 text-xs font-medium focus:ring-2 focus:ring-primary/10 transition-all"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleRemoveSpec(index)}
+                  className="p-2 text-secondary/40 hover:text-red-500 transition-colors"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ))}
+            {specs.length === 0 && (
+              <p className="text-[10px] text-secondary/40 italic text-center py-4 bg-accent/5 rounded-xl border border-dashed border-border/20">
+                No hay especificaciones añadidas. Pulsa "Añadir Atributo" para agregar detalles técnicos.
+              </p>
+            )}
+          </div>
         </div>
       </div>
 

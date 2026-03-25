@@ -20,6 +20,7 @@ export class PrismaCatalogRepository implements ICatalogRepository {
       data: {
         name: data.name,
         description: data.description,
+        imageUrl: data.imageUrl,
       },
     });
   }
@@ -27,7 +28,11 @@ export class PrismaCatalogRepository implements ICatalogRepository {
   async updateCategory(id: string, data: any): Promise<Category> {
     return prisma.category.update({
       where: { id },
-      data,
+      data: {
+        name: data.name,
+        description: data.description,
+        imageUrl: data.imageUrl,
+      },
     });
   }
 
@@ -60,6 +65,7 @@ export class PrismaCatalogRepository implements ICatalogRepository {
         stock: data.stock,
         imageUrl: data.imageUrl,
         categoryId: data.categoryId,
+        specs: data.specs,
       },
       include: { category: true },
     });
@@ -68,7 +74,15 @@ export class PrismaCatalogRepository implements ICatalogRepository {
   async updateProduct(id: string, data: any): Promise<Product> {
     return prisma.product.update({
       where: { id },
-      data,
+      data: {
+        name: data.name,
+        description: data.description,
+        price: data.price,
+        stock: data.stock,
+        imageUrl: data.imageUrl,
+        categoryId: data.categoryId,
+        specs: data.specs,
+      },
       include: { category: true },
     });
   }
