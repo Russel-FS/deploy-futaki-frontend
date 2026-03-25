@@ -10,17 +10,16 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-white dark:bg-[#050505] text-foreground font-sans">
+    <div className="flex min-h-screen bg-system-gray-6   text-foreground font-sans">
       <AdminSidebar />
-      <main className="flex-1 relative overflow-y-auto">
-        <div className="absolute inset-0 bg-linear-to-tr from-accent/5 via-transparent to-primary/5 pointer-events-none" />
+      <main className="flex-1 relative overflow-y-auto w-full">
         <AnimatePresence mode="wait">
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="relative p-8 lg:p-12"
+            className="relative px-6 py-10 lg:px-12 lg:py-16 max-w-7xl mx-auto"
           >
             {children}
           </motion.div>

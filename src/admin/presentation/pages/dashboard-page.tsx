@@ -1,12 +1,7 @@
 "use client";
 
 import React from "react";
-import { 
-  Package, 
-  Tags, 
-  Users, 
-  ArrowUpRight 
-} from "lucide-react";
+import { Package, Tags, Users, ArrowUpRight } from "lucide-react";
 import { useAdminStats } from "../hooks/use-admin-stats";
 import { motion, Variants } from "framer-motion";
 
@@ -15,100 +10,112 @@ const container: Variants = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const item: Variants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring", stiffness: 300, damping: 24 },
+  },
 };
 
 export const AdminDashboardPageContent = () => {
   const { data: stats, isLoading } = useAdminStats();
 
   const statItems = [
-    { 
-      label: "Total Productos", 
-      value: stats?.products ?? 0, 
-      icon: Package, 
-      color: "text-blue-600 dark:text-blue-400", 
-      bg: "bg-blue-50 dark:bg-blue-500/10",
-      description: "Inventario activo"
+    {
+      label: "Total Productos",
+      value: stats?.products ?? 0,
+      icon: Package,
+      color: "text-blue-600 ",
+      bg: "bg-blue-50 ",
+      description: "Inventario activo",
     },
-    { 
-      label: "Categorías", 
-      value: stats?.categories ?? 0, 
-      icon: Tags, 
-      color: "text-purple-600 dark:text-purple-400", 
-      bg: "bg-purple-50 dark:bg-purple-500/10",
-      description: "Segmentación de catálogo"
+    {
+      label: "Categorías",
+      value: stats?.categories ?? 0,
+      icon: Tags,
+      color: "text-purple-600 ",
+      bg: "bg-purple-50 ",
+      description: "Segmentación de catálogo",
     },
-    { 
-      label: "Administradores", 
-      value: stats?.admins ?? 0, 
-      icon: Users, 
-      color: "text-emerald-600 dark:text-emerald-400", 
-      bg: "bg-emerald-50 dark:bg-emerald-500/10",
-      description: "Acceso al panel"
+    {
+      label: "Administradores",
+      value: stats?.admins ?? 0,
+      icon: Users,
+      color: "text-emerald-600 ",
+      bg: "bg-emerald-50 ",
+      description: "Acceso al panel",
     },
   ];
 
   return (
     <div className="max-w-7xl mx-auto space-y-12">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="flex flex-col gap-2"
+        className="flex flex-col gap-1.5"
       >
-        <h1 className="text-4xl font-black tracking-tighter text-foreground leading-none">
+        <h1 className="text-3xl font-bold tracking-tight text-foreground">
           Dashboard
         </h1>
-        <p className="text-secondary font-medium tracking-tight">
-          Panel de control centralizado de <span className="text-primary font-bold">Futeki Intelligence</span>.
+        <p className="text-secondary text-sm font-medium opacity-60">
+          Resumen operativo de{" "}
+          <span className="text-primary font-semibold">
+            Futeki Intelligence
+          </span>
+          .
         </p>
       </motion.div>
 
-      <motion.div 
+      <motion.div
         variants={container}
         initial="hidden"
         animate="show"
         className="grid gap-8 md:grid-cols-3"
       >
         {statItems.map((stat, i) => (
-          <motion.div 
-            key={i} 
+          <motion.div
+            key={i}
             variants={item}
-            className="group relative p-8 bg-white dark:bg-white/2 rounded-[2.5rem] border border-border/5 hover:border-primary/20 transition-all shadow-sm hover:shadow-xl hover:shadow-primary/5 cursor-default overflow-hidden"
+            className="group relative p-7 bg-white  rounded-3xl border border-border/10 hover:border-primary/30 transition-all cursor-default overflow-hidden shadow-sm"
           >
-            <div className="absolute top-0 right-0 p-8 text-secondary/10 group-hover:text-primary/20 transition-colors">
-              <stat.icon size={80} strokeWidth={1.5} />
+            <div className="absolute top-0 right-0 p-8 text-secondary/5 group-hover:text-primary/10 transition-colors">
+              <stat.icon size={80} strokeWidth={1} />
             </div>
-            
+
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-8">
-                <div className={`${stat.bg} ${stat.color} p-4 rounded-2xl shadow-inner`}>
-                  <stat.icon size={28} />
+                <div className="bg-system-gray-6  p-3.5 rounded-xl border border-border/10">
+                  <stat.icon size={22} className={stat.color} strokeWidth={2} />
                 </div>
-                <div className="flex items-center gap-1 text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-3 py-1.5 rounded-full">
-                  Hoy <ArrowUpRight size={12} />
+                <div className="flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/5 px-2.5 py-1 rounded-full border border-primary/10">
+                  Hoy <ArrowUpRight size={10} />
                 </div>
               </div>
-              
+
               <div>
-                <p className="text-secondary text-sm font-bold uppercase tracking-widest mb-1">{stat.label}</p>
+                <p className="text-secondary/40 text-[11px] font-semibold tracking-tight mb-1">
+                  {stat.label}
+                </p>
                 <div className="flex items-baseline gap-2">
-                  <h3 className="text-5xl font-black tracking-tighter">
+                  <h3 className="text-4xl font-bold tracking-tight text-foreground">
                     {isLoading ? (
-                      <div className="h-12 w-20 bg-accent/20 animate-pulse rounded-2xl" />
+                      <div className="h-10 w-16 bg-accent/20 animate-pulse rounded-xl" />
                     ) : (
                       stat.value
                     )}
                   </h3>
-                  <span className="text-xs font-bold text-secondary/60">unidades</span>
+                  <span className="text-[10px] font-bold text-secondary/30 uppercase italic tracking-wider">
+                    unidades
+                  </span>
                 </div>
-                <p className="text-[11px] text-secondary/50 font-medium mt-4 border-t border-border/5 pt-4">
+                <p className="text-[11px] text-secondary/40 font-medium mt-4 border-t border-border/5 pt-4">
                   {stat.description}
                 </p>
               </div>
@@ -117,18 +124,23 @@ export const AdminDashboardPageContent = () => {
         ))}
       </motion.div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-accent/5 dark:bg-white/1 rounded-[3rem] border-2 border-dashed border-border/10 p-12 text-center"
+        className="bg-white  rounded-3xl border border-border/10 p-12 text-center shadow-sm"
       >
         <div className="max-w-md mx-auto space-y-4">
-          <div className="w-16 h-16 bg-accent/10 rounded-2xl mx-auto flex items-center justify-center text-secondary">
-            <Package size={32} />
+          <div className="w-14 h-14 bg-system-gray-6  border border-border/10 rounded-2xl mx-auto flex items-center justify-center text-primary shadow-sm">
+            <Package size={28} strokeWidth={1.5} />
           </div>
-          <h4 className="text-xl font-black tracking-tight">Analitycs Avanzados</h4>
-          <p className="text-secondary text-sm font-medium">Estamos preparando gráficas de rendimiento y predicción de stock mediante IA para optimizar tu cadena de suministro.</p>
+          <h4 className="text-xl font-bold tracking-tight">
+            Analytics Avanzados
+          </h4>
+          <p className="text-secondary font-medium text-sm opacity-60">
+            Estamos preparando gráficas de rendimiento y predicción de stock
+            mediante IA para optimizar tu cadena de suministro.
+          </p>
         </div>
       </motion.div>
     </div>

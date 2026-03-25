@@ -13,7 +13,6 @@ const geistMono = Geist_Mono({
 });
 
 import { COMPANY_CONFIG } from "@/core/config/company.config";
-import { WhatsAppFloatingButton } from "@/shared/ui/whatsapp-floating";
 import QueryProvider from "@/shared/providers/query-provider";
 
 export const metadata: Metadata = {
@@ -29,10 +28,7 @@ export default function RootLayout({
   return (
     <html lang="es" suppressHydrationWarning>
       <body className="antialiased font-sans">
-        <QueryProvider>
-          {children}
-          <WhatsAppFloatingButton />
-        </QueryProvider>
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );

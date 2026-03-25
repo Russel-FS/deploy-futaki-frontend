@@ -29,26 +29,27 @@ export const AdminModal = ({
             className="absolute inset-0 bg-black/40 backdrop-blur-md"
           />
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="relative w-full max-w-2xl bg-white dark:bg-[#0A0A0A] rounded-[2.5rem] shadow-2xl overflow-hidden"
+            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 20 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="bg-white  w-full max-w-lg rounded-4xl border border-border/10 overflow-hidden shadow-2xl flex flex-col relative"
+            onClick={(e) => e.stopPropagation()}
           >
             {/* Cabecera Fija */}
-            <div className="flex items-center justify-between p-8 pb-4 border-b border-border/5">
-              <h2 className="text-xl font-black tracking-tighter text-foreground">
+            <div className="flex items-center justify-between px-8 py-5 border-b border-border/5 bg-system-gray-6  ">
+              <h2 className="text-xl font-bold tracking-tight text-foreground">
                 {title}
               </h2>
               <button
                 onClick={onClose}
-                className="p-3 bg-accent/5 hover:bg-accent/10 rounded-full transition-all active:scale-90"
+                className="p-2 text-secondary/40 hover:text-foreground hover:bg-white  rounded-full transition-all active:scale-90"
               >
-                <X size={20} className="text-secondary" />
+                <X size={20} strokeWidth={2.5} />
               </button>
             </div>
 
-            <div className="p-8 pt-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
+            <div className="p-7 pt-4 max-h-[75vh] overflow-y-auto custom-scrollbar">
               {children}
             </div>
           </motion.div>

@@ -2,15 +2,10 @@
 
 import React, { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Upload,
-  X,
-  Loader2,
-  Tag,
-  FileText,
-  Image as ImageIcon,
-} from "lucide-react";
+import { Upload, X, Loader2 } from "lucide-react";
 import Image from "next/image";
+import { Input, TextArea } from "@/shared/ui/input";
+import { Button } from "@/shared/ui/button";
 
 interface CategoryFormProps {
   onSuccess: () => void;
@@ -100,43 +95,30 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-4 text-left">
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-black uppercase tracking-widest text-secondary/40 flex items-center gap-2 ml-1">
-            Nombre de la Categoría
-          </label>
-          <input
-            type="text"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Ej. Smartphones"
-            className="w-full bg-accent/5 border border-border/5 rounded-2xl p-3.5 text-sm font-bold focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-secondary/20"
-          />
-        </div>
+        <Input
+          label="Nombre de la Categoría"
+          required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ej. Smartphones"
+        />
 
-        {/* Descripción */}
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-black uppercase tracking-widest text-secondary/40 flex items-center gap-2 ml-1">
-            Descripción Corta
-          </label>
-          <textarea
-            rows={2}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Breve descripción para el catálogo..."
-            className="w-full bg-accent/5 border border-border/5 rounded-2xl p-3.5 text-sm font-bold focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-secondary/20 min-h-[80px] resize-none"
-          />
-        </div>
+        <TextArea
+          label="Descripción Corta"
+          rows={2}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Breve descripción para el catálogo..."
+        />
 
-        {/* Imagen de Categoría */}
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-black uppercase tracking-widest text-secondary/40 flex items-center gap-2 ml-1">
+        <div className="space-y-2">
+          <label className="text-[11px] font-semibold text-secondary/50 ml-1 flex items-center gap-2">
             Imagen de Identidad
           </label>
 
           <div className="relative group">
             {previewUrl ? (
-              <div className="relative h-32 w-full rounded-2xl overflow-hidden border border-border/10 shadow-sm">
+              <div className="relative h-32 w-full rounded-2xl overflow-hidden border border-border/10">
                 <Image
                   src={previewUrl}
                   alt="Preview"
@@ -153,19 +135,19 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
                 </button>
               </div>
             ) : (
-              <label className="flex items-center gap-4 p-4 w-full border border-dashed border-border/20 rounded-2xl bg-accent/5 hover:bg-accent/10 transition-all cursor-pointer group/upload">
-                <div className="p-3 bg-white dark:bg-white/5 rounded-xl shadow-sm group-hover/upload:scale-105 transition-transform">
+              <label className="flex items-center gap-4 p-4 w-full border border-dashed border-border/20 rounded-2xl bg-system-gray-6 hover:bg-accent/50 transition-all cursor-pointer group/upload">
+                <div className="p-3 bg-white rounded-xl border border-border/5 group-hover/upload:scale-105 transition-transform">
                   <Upload
-                    className="text-secondary/40 group-hover/upload:text-primary transition-colors"
+                    className="text-secondary/30 group-hover/upload:text-primary transition-colors"
                     size={20}
                   />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black text-foreground uppercase tracking-widest">
+                  <p className="text-[11px] font-semibold text-foreground">
                     Subir Imagen
                   </p>
-                  <p className="text-[9px] font-bold text-secondary/40 uppercase tracking-tighter mt-0.5">
-                    JPG, PNG Máx 5MB
+                  <p className="text-[10px] font-medium text-secondary/40 mt-0.5">
+                    Recomendado: 1200x800px
                   </p>
                 </div>
                 <input
@@ -181,18 +163,15 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
       </div>
 
       <div className="flex gap-3 pt-2">
-        <button
+        <Button
           type="button"
+          variant="outline"
           onClick={onSuccess}
-          className="flex-1 py-3 px-6 rounded-xl border border-border/5 text-[11px] font-black uppercase tracking-widest text-secondary hover:bg-accent/5 transition-all"
+          className="flex-1"
         >
           Cancelar
-        </button>
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="flex-2 bg-primary text-primary-foreground py-3 px-6 rounded-xl text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:shadow-lg hover:shadow-primary/20 active:scale-95 transition-all disabled:opacity-50"
-        >
+        </Button>
+        <Button type="submit" disabled={isSubmitting} className="flex-2">
           {isSubmitting ? (
             <Loader2 size={16} className="animate-spin" />
           ) : initialData ? (
@@ -200,7 +179,7 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
           ) : (
             "Crear"
           )}
-        </button>
+        </Button>
       </div>
     </form>
   );
