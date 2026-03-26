@@ -1,11 +1,11 @@
 import React from "react";
 import { Container } from "@/shared/ui/container";
 import { motion } from "framer-motion";
-import { useCategories } from "@/admin/presentation/hooks/use-categories";
+import { usePublicCategories } from "../hooks/use-public-catalog";
 import { Package } from "lucide-react";
 
 export const CategoryGrid: React.FC = () => {
-  const { data: categories = [], isLoading } = useCategories();
+  const { data: categories = [], isLoading } = usePublicCategories();
 
   return (
     <section className="py-24">

@@ -4,7 +4,7 @@ import React from "react";
 import { Navbar } from "@/shared/ui/navbar";
 import { Footer } from "@/core/presentation/footer";
 import { ProductDetails } from "@/catalog/presentation/components/product-details";
-import { useProduct } from "../hooks/use-product";
+import { usePublicProduct } from "../hooks/use-public-catalog";
 import { notFound } from "next/navigation";
 import { Loader2 } from "lucide-react";
 
@@ -13,7 +13,7 @@ interface ProductDetailPageProps {
 }
 
 export const ProductDetailPageContent = ({ id }: ProductDetailPageProps) => {
-  const { data: product, isLoading, error } = useProduct(id);
+  const { data: product, isLoading, error } = usePublicProduct(id);
 
   if (isLoading) {
     return (

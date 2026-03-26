@@ -27,8 +27,8 @@ export const AdminSidebar = () => {
     <aside className="w-72 border-r border-border/40 bg-white  flex flex-col sticky top-0 h-screen z-40">
       <div className="p-10">
         <Link href="/" className="flex items-center gap-4 group">
-          <div className="h-10 w-10 flex items-center justify-center bg-system-gray-6 rounded-xl group-hover:scale-105 transition-transform">
-            <FutakiLogo className="h-6 w-auto text-primary" />
+          <div className="h-10 w-10 flex items-center justify-center rounded-xl group-hover:scale-105 transition-transform">
+            <FutakiLogo className="h-10 w-auto text-primary" />
           </div>
           <div>
             <h2 className="text-xl font-bold tracking-tight text-foreground leading-[1.1]">

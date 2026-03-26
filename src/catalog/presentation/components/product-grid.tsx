@@ -3,7 +3,7 @@
 import React from "react";
 import { Container } from "@/shared/ui/container";
 import { ProductCard } from "./product-card";
-import { usePublicProducts } from "../hooks/use-public-products";
+import { usePublicProducts } from "../hooks/use-public-catalog";
 
 export const ProductGrid: React.FC = () => {
   const { data: products = [], isLoading } = usePublicProducts();
