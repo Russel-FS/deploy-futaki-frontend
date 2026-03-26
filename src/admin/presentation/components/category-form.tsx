@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Upload, X, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Input, TextArea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { toast } from "@/shared/ui/toast";
+import { useSaveCategory } from "../hooks/use-categories";
 
 interface CategoryFormProps {
   onSuccess: () => void;
@@ -14,7 +14,6 @@ interface CategoryFormProps {
 }
 
 export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
-  const queryClient = useQueryClient();
   const [name, setName] = useState(initialData?.name || "");
   const [description, setDescription] = useState(
     initialData?.description || "",
@@ -24,55 +23,8 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
     initialData?.imageUrl || null,
   );
 
-  /**
-   * Maneja la lógica de creación o actualización de una categoría.
-   * @param data - Objeto con el nombre y descripción de la categoría.
-   */
-  const mutation = useMutation({
-    mutationFn: async (data: { name: string; description: string }) => {
-      let imageUrl = previewUrl;
+  const mutation = useSaveCategory();
 
-      if (selectedFile) {
-        const body = new FormData();
-        body.append("file", selectedFile);
-        const uploadRes = await fetch("/api/admin/upload", {
-          method: "POST",
-          body,
-        });
-        const uploadData = await uploadRes.json();
-        imageUrl = uploadData.url;
-      }
-
-      const method = initialData ? "PUT" : "POST";
-      const url = initialData
-        ? `/api/catalog/categories/${initialData.id}`
-        : "/api/catalog/categories";
-
-      return fetch(url, {
-        method,
-        body: JSON.stringify({ ...data, imageUrl }),
-        headers: { "Content-Type": "application/json" },
-      }).then((res) => res.json());
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
-      toast.success(
-        initialData
-          ? "Categoría actualizada correctamente."
-          : "Categoría creada correctamente.",
-      );
-      onSuccess();
-    },
-    onError: () => {
-      toast.error("Ocurrió un error. Por favor inténtalo de nuevo.");
-    },
-  });
-
-  /**
-   * Maneja la selección de un archivo de imagen.
-   * @param e - Evento de cambio de archivo.
-   */
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -81,22 +33,41 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  /**
-   * Maneja la eliminación de un archivo de imagen.
-   */
   const handleRemoveImage = () => {
     if (previewUrl && !initialData) URL.revokeObjectURL(previewUrl);
     setSelectedFile(null);
     setPreviewUrl(null);
   };
 
-  /**
-   * Maneja el envío del formulario.
-   * @param e - Evento de envío del formulario.
-   */
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate({ name, description });
+    
+    let imageUrl = previewUrl;
+
+    if (selectedFile) {
+      const body = new FormData();
+      body.append("file", selectedFile);
+      try {
+        const uploadRes = await fetch("/api/admin/upload", {
+          method: "POST",
+          body,
+        });
+        const uploadData = await uploadRes.json();
+        imageUrl = uploadData.url;
+      } catch (error) {
+        toast.error("Error al subir la imagen.");
+        return;
+      }
+    }
+
+    mutation.mutate({ 
+      id: initialData?.id, 
+      name, 
+      description, 
+      imageUrl 
+    }, {
+      onSuccess: () => onSuccess()
+    });
   };
 
   const isSubmitting = mutation.isPending;

@@ -3,22 +3,25 @@ import {
   Plus,
   Search,
   Edit2,
-  Trash2,
   Filter,
   Image as ImageIcon,
 } from "lucide-react";
 import { AdminModal } from "../components/admin-modal";
 import { CategoryForm } from "../components/category-form";
-import { useCategories } from "../hooks/use-categories";
+import { useCategories, useToggleCategoryActive } from "../hooks/use-categories";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button";
 import { CategoryRowSkeleton } from "@/shared/ui/skeleton";
+import { Switch } from "@/shared/ui/switch";
+import { useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/shared/lib/utils";
 
 export const CategoriesPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const { data: categories = [], isLoading, error } = useCategories();
+  const toggleMutation = useToggleCategoryActive();
 
   const handleOpenCreate = () => {
     setEditingCategory(null);
@@ -28,6 +31,10 @@ export const CategoriesPageContent = () => {
   const handleOpenEdit = (category: any) => {
     setEditingCategory(category);
     setIsModalOpen(true);
+  };
+
+  const handleToggleActive = (id: string, currentStatus: boolean) => {
+    toggleMutation.mutate({ id, isActive: !currentStatus });
   };
 
   if (error) {
@@ -108,7 +115,10 @@ export const CategoriesPageContent = () => {
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.03 }}
-                      className="hover:bg-system-gray-6  transition-colors group cursor-default"
+                      className={cn(
+                        "hover:bg-system-gray-6 transition-colors group cursor-default",
+                        !category.isActive && "opacity-50 grayscale-[0.5]",
+                      )}
                     >
                       <td className="px-8 py-4">
                         <div className="h-10 w-14 rounded-xl bg-system-gray-6  border border-border/10 overflow-hidden relative shrink-0 group-hover:scale-105 transition-transform duration-500">
@@ -138,21 +148,24 @@ export const CategoriesPageContent = () => {
                         </div>
                       </td>
                       <td className="px-8 py-4 text-right">
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                        <div className="flex items-center justify-end gap-3">
+                          <Switch
+                            checked={category.isActive}
+                            onChange={() =>
+                              handleToggleActive(
+                                category.id,
+                                category.isActive,
+                              )
+                            }
+                            disabled={toggleMutation.isPending}
+                          />
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleOpenEdit(category)}
-                            className="p-2"
+                            className="p-2 opacity-0 group-hover:opacity-100 transition-all"
                           >
                             <Edit2 size={14} />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="p-2 text-red-500/50 hover:text-red-500"
-                          >
-                            <Trash2 size={14} />
                           </Button>
                         </div>
                       </td>

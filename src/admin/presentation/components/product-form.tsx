@@ -1,23 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Upload,
   X,
   Package,
   Loader2,
   Trash2,
-  DollarSign,
-  Box,
-  FileText,
 } from "lucide-react";
 import Image from "next/image";
 import { useCategories } from "../hooks/use-categories";
-import { cn } from "@/shared/lib/utils";
 import { Input, TextArea } from "@/shared/ui/input";
 import { Button } from "@/shared/ui/button";
 import { toast } from "@/shared/ui/toast";
+import { useSaveProduct } from "../hooks/use-products";
 
 interface ProductFormProps {
   onSuccess: () => void;
@@ -25,7 +21,6 @@ interface ProductFormProps {
 }
 
 export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
-  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     name: initialData?.name || "",
     description: initialData?.description || "",
@@ -42,53 +37,7 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
   );
 
   const { data: categories = [] } = useCategories();
-
-  const mutation = useMutation({
-    mutationFn: async (data: typeof formData) => {
-      let imageUrl = previewUrl;
-
-      if (selectedFile) {
-        const body = new FormData();
-        body.append("file", selectedFile);
-        const uploadRes = await fetch("/api/admin/upload", {
-          method: "POST",
-          body,
-        });
-        const uploadData = await uploadRes.json();
-        imageUrl = uploadData.url;
-      }
-
-      const method = initialData ? "PUT" : "POST";
-      const url = initialData
-        ? `/api/catalog/products/${initialData.id}`
-        : "/api/catalog/products";
-
-      return fetch(url, {
-        method,
-        body: JSON.stringify({
-          ...data,
-          price: parseFloat(data.price),
-          stock: parseInt(data.stock),
-          imageUrl,
-          specs,
-        }),
-        headers: { "Content-Type": "application/json" },
-      }).then((res) => res.json());
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["products"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
-      toast.success(
-        initialData
-          ? "Producto actualizado correctamente."
-          : "Producto registrado correctamente.",
-      );
-      onSuccess();
-    },
-    onError: () => {
-      toast.error("Ocurrió un error. Por favor inténtalo de nuevo.");
-    },
-  });
+  const mutation = useSaveProduct();
 
   const handleAddSpec = () => {
     setSpecs([...specs, { label: "", value: "" }]);
@@ -122,9 +71,37 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
     setPreviewUrl(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    mutation.mutate(formData);
+    
+    let imageUrl = previewUrl;
+
+    if (selectedFile) {
+      const body = new FormData();
+      body.append("file", selectedFile);
+      try {
+        const uploadRes = await fetch("/api/admin/upload", {
+          method: "POST",
+          body,
+        });
+        const uploadData = await uploadRes.json();
+        imageUrl = uploadData.url;
+      } catch (error) {
+        toast.error("Error al subir la imagen.");
+        return;
+      }
+    }
+
+    mutation.mutate({
+      id: initialData?.id,
+      ...formData,
+      price: parseFloat(formData.price),
+      stock: parseInt(formData.stock),
+      imageUrl,
+      specs,
+    }, {
+      onSuccess: () => onSuccess()
+    });
   };
 
   const isSubmitting = mutation.isPending;

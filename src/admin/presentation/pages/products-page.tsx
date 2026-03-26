@@ -1,18 +1,22 @@
 import React, { useState } from "react";
-import { Plus, Search, Edit2, Trash2, Package, Filter } from "lucide-react";
+import { Plus, Search, Edit2, Package, Filter } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/shared/lib/utils";
 import { AdminModal } from "../components/admin-modal";
 import { ProductForm } from "../components/product-form";
-import { useProducts } from "../hooks/use-products";
+import { useProducts, useToggleProductActive } from "../hooks/use-products";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/ui/button";
 import { ProductRowSkeleton } from "@/shared/ui/skeleton";
+import { Switch } from "@/shared/ui/switch";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "@/shared/ui/toast";
 
 export const ProductsPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
   const { data: products = [], isLoading, error } = useProducts();
+  const toggleMutation = useToggleProductActive();
 
   const handleOpenCreate = () => {
     setEditingProduct(null);
@@ -22,6 +26,10 @@ export const ProductsPageContent = () => {
   const handleOpenEdit = (product: any) => {
     setEditingProduct(product);
     setIsModalOpen(true);
+  };
+
+  const handleToggleActive = (id: string, currentStatus: boolean) => {
+    toggleMutation.mutate({ id, isActive: !currentStatus });
   };
 
   if (error) {
@@ -103,7 +111,10 @@ export const ProductsPageContent = () => {
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.03 }}
-                      className="hover:bg-system-gray-6  transition-colors group cursor-default"
+                      className={cn(
+                        "hover:bg-system-gray-6 transition-colors group cursor-default",
+                        !product.isActive && "opacity-50 grayscale-[0.5]",
+                      )}
                     >
                       <td className="px-8 py-4">
                         <div className="flex items-center gap-4">
@@ -134,7 +145,7 @@ export const ProductsPageContent = () => {
                       </td>
                       <td className="px-8 py-4">
                         <span className="text-secondary text-[11px] font-semibold bg-system-gray-6  px-2.5 py-0.5 rounded-full border border-border/10">
-                          {product.category.name}
+                          {product.category?.name || "Sin Categoría"}
                         </span>
                       </td>
                       <td className="px-8 py-4 text-right">
@@ -156,22 +167,22 @@ export const ProductsPageContent = () => {
                           </span>
                         </div>
                       </td>
-                      <td className="px-8 py-3 text-right">
-                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                      <td className="px-8 py-4 text-right">
+                        <div className="flex items-center justify-end gap-3">
+                          <Switch
+                            checked={product.isActive}
+                            onChange={() =>
+                              handleToggleActive(product.id, product.isActive)
+                            }
+                            disabled={toggleMutation.isPending}
+                          />
                           <Button
                             variant="ghost"
                             size="sm"
                             onClick={() => handleOpenEdit(product)}
-                            className="p-2"
+                            className="p-2 opacity-0 group-hover:opacity-100 transition-all"
                           >
                             <Edit2 size={14} />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="p-2 text-red-500/50 hover:text-red-500"
-                          >
-                            <Trash2 size={14} />
                           </Button>
                         </div>
                       </td>
