@@ -41,4 +41,16 @@ export class PrismaPublicCatalogRepository implements IPublicCatalogRepository {
     
     return product;
   }
+
+  async getCategoryById(id: string): Promise<Category | null> {
+    const category = await prisma.category.findUnique({
+      where: { id },
+    });
+
+    if (category && !category.isActive) {
+      return null;
+    }
+
+    return category;
+  }
 }

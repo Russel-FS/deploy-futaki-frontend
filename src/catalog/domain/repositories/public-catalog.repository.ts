@@ -5,4 +5,5 @@ export interface IPublicCatalogRepository {
   getPublicProducts(): Promise<Product[]>;
   getPublicProductsByCategory(categoryId: string): Promise<Product[]>;
   getProductById(id: string): Promise<Product | null>;
+  getCategoryById(id: string): Promise<Category | null>;
 }
