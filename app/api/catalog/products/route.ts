@@ -1,34 +1,16 @@
 import { NextResponse } from "next/server";
-import { PrismaCatalogRepository } from "@/catalog/infrastructure/repositories/prisma-catalog.repository";
-import {
-  GetProductsUseCase,
-  CreateProductUseCase,
-} from "@/catalog/application/use-cases/catalog.use-cases";
+import { PrismaPublicCatalogRepository } from "@/catalog/infrastructure/repositories/prisma-public-catalog.repository";
+import { GetPublicProductsUseCase } from "@/catalog/application/use-cases/public/public.use-cases";
 
-const repository = new PrismaCatalogRepository();
+const publicRepo = new PrismaPublicCatalogRepository();
 
 export async function GET() {
   try {
-    const useCase = new GetProductsUseCase(repository);
+    const useCase = new GetPublicProductsUseCase(publicRepo);
     const products = await useCase.execute();
     return NextResponse.json(products);
   } catch (error) {
-    console.error("Error al obtener los productos:", error);
-    return NextResponse.json(
-      { error: "Error interno del servidor" },
-      { status: 500 },
-    );
-  }
-}
-
-export async function POST(request: Request) {
-  try {
-    const data = await request.json();
-    const useCase = new CreateProductUseCase(repository);
-    const product = await useCase.execute(data);
-    return NextResponse.json(product, { status: 201 });
-  } catch (error) {
-    console.error("Error al crear el producto:", error);
+    console.error("Error al obtener los productos (Público):", error);
     return NextResponse.json(
       { error: "Error interno del servidor" },
       { status: 500 },
