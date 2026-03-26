@@ -1,8 +1,8 @@
 import { prisma } from "@/shared/lib/prisma";
-import { Category, Product } from "../../domain/entities/catalog.entity";
-import { ICatalogRepository } from "../../domain/repositories/catalog.repository";
+import { IAdminCatalogRepository } from "@/catalog/domain/repositories/admin-catalog.repository";
+import { Category, Product } from "@/catalog/domain/entities/catalog.entity";
 
-export class PrismaCatalogRepository implements ICatalogRepository {
+export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
   async getCategories(): Promise<Category[]> {
     return prisma.category.findMany({
       orderBy: { name: "asc" },
@@ -15,24 +15,21 @@ export class PrismaCatalogRepository implements ICatalogRepository {
     });
   }
 
-  async createCategory(data: any): Promise<Category> {
+  async createCategory(data: Partial<Category>): Promise<Category> {
     return prisma.category.create({
       data: {
-        name: data.name,
-        description: data.description,
-        imageUrl: data.imageUrl,
+        name: data.name!,
+        description: data.description || "",
+        imageUrl: data.imageUrl || "",
+        isActive: data.isActive ?? true,
       },
     });
   }
 
-  async updateCategory(id: string, data: any): Promise<Category> {
+  async updateCategory(id: string, data: Partial<Category>): Promise<Category> {
     return prisma.category.update({
       where: { id },
-      data: {
-        name: data.name,
-        description: data.description,
-        imageUrl: data.imageUrl,
-      },
+      data: { ...data },
     });
   }
 
@@ -40,6 +37,20 @@ export class PrismaCatalogRepository implements ICatalogRepository {
     await prisma.category.delete({
       where: { id },
     });
+  }
+
+  async toggleCategoryActive(id: string, isActive: boolean): Promise<Category> {
+    try {
+      return await prisma.category.update({
+        where: { id },
+        data: { isActive },
+      });
+    } catch (error: any) {
+      if (error.code === "P2025") {
+        throw new Error(`Categoría con ID ${id} no encontrada`);
+      }
+      throw error;
+    }
   }
 
   async getProducts(): Promise<Product[]> {
@@ -61,28 +72,23 @@ export class PrismaCatalogRepository implements ICatalogRepository {
       data: {
         name: data.name,
         description: data.description,
-        price: data.price,
-        stock: data.stock,
+        price: Number(data.price),
         imageUrl: data.imageUrl,
         categoryId: data.categoryId,
-        specs: data.specs,
+        specs: data.specs || [],
+        isActive: data.isActive ?? true,
       },
       include: { category: true },
     });
   }
 
   async updateProduct(id: string, data: any): Promise<Product> {
+    const updateData = { ...data };
+    if (data.price) updateData.price = Number(data.price);
+    
     return prisma.product.update({
       where: { id },
-      data: {
-        name: data.name,
-        description: data.description,
-        price: data.price,
-        stock: data.stock,
-        imageUrl: data.imageUrl,
-        categoryId: data.categoryId,
-        specs: data.specs,
-      },
+      data: updateData,
       include: { category: true },
     });
   }
@@ -99,5 +105,20 @@ export class PrismaCatalogRepository implements ICatalogRepository {
       include: { category: true },
       orderBy: { createdAt: "desc" },
     });
+  }
+
+  async toggleProductActive(id: string, isActive: boolean): Promise<Product> {
+    try {
+      return await prisma.product.update({
+        where: { id },
+        data: { isActive },
+        include: { category: true },
+      });
+    } catch (error: any) {
+      if (error.code === "P2025") {
+        throw new Error(`Producto con ID ${id} no encontrado`);
+      }
+      throw error;
+    }
   }
 }
