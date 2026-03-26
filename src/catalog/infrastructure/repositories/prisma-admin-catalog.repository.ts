@@ -1,12 +1,31 @@
 import { prisma } from "@/shared/lib/prisma";
-import { IAdminCatalogRepository } from "@/catalog/domain/repositories/admin-catalog.repository";
+import { IAdminCatalogRepository, PaginatedResult } from "@/catalog/domain/repositories/admin-catalog.repository";
 import { Category, Product } from "@/catalog/domain/entities/catalog.entity";
 
 export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
-  async getCategories(): Promise<Category[]> {
-    return prisma.category.findMany({
-      orderBy: { name: "asc" },
-    });
+  async getCategories(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }): Promise<PaginatedResult<Category>> {
+    const { page = 1, limit = 10, search = "" } = params;
+    const skip = (page - 1) * limit;
+
+    const where = search
+      ? { name: { contains: search, mode: "insensitive" as any } }
+      : {};
+
+    const [total, data] = await Promise.all([
+      prisma.category.count({ where }),
+      prisma.category.findMany({
+        where,
+        skip,
+        take: limit,
+        orderBy: { name: "asc" },
+      }),
+    ]);
+
+    return { data, total, page, limit };
   }
 
   async getCategoryById(id: string): Promise<Category | null> {
@@ -39,11 +58,30 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
     });
   }
 
-  async getProducts(): Promise<Product[]> {
-    return prisma.product.findMany({
-      include: { category: true },
-      orderBy: { createdAt: "desc" },
-    });
+  async getProducts(params: {
+    page?: number;
+    limit?: number;
+    search?: string;
+  }): Promise<PaginatedResult<Product>> {
+    const { page = 1, limit = 10, search = "" } = params;
+    const skip = (page - 1) * limit;
+
+    const where = search
+      ? { name: { contains: search, mode: "insensitive" as any } }
+      : {};
+
+    const [total, data] = await Promise.all([
+      prisma.product.count({ where }),
+      prisma.product.findMany({
+        where,
+        skip,
+        take: limit,
+        include: { category: true },
+        orderBy: { createdAt: "desc" },
+      }),
+    ]);
+
+    return { data, total, page, limit };
   }
 
   async getProductById(id: string): Promise<Product | null> {
@@ -87,7 +125,7 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
 
   async getProductsByCategory(categoryId: string): Promise<Product[]> {
     return prisma.product.findMany({
-      where: { categoryId },
+      where: { categoryId, isActive: true },
       include: { category: true },
       orderBy: { createdAt: "desc" },
     });

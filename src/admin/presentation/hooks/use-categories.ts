@@ -9,11 +9,26 @@ export interface Category {
   isActive: boolean;
 }
 
-export const useCategories = () => {
-  return useQuery<Category[]>({
-    queryKey: ["categories"],
-    queryFn: () =>
-      fetch("/api/admin/catalog/categories").then((res) => res.json()),
+export interface PaginatedCategoryResponse {
+  data: Category[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export const useCategories = (params: { page?: number; limit?: number; search?: string } = {}) => {
+  const { page = 1, limit = 10, search = "" } = params;
+  
+  return useQuery<PaginatedCategoryResponse>({
+    queryKey: ["categories", { page, limit, search }],
+    queryFn: () => {
+      const url = new URL("/api/admin/catalog/categories", window.location.origin);
+      url.searchParams.set("page", page.toString());
+      url.searchParams.set("limit", limit.toString());
+      if (search) url.searchParams.set("search", search);
+      
+      return fetch(url.toString()).then((res) => res.json());
+    },
   });
 };
 

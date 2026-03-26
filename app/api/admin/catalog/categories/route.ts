@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 import { PrismaAdminCatalogRepository } from "@/catalog/infrastructure/repositories/prisma-admin-catalog.repository";
 import {
   GetAdminCategoriesUseCase,
@@ -7,11 +7,17 @@ import {
 
 const adminRepo = new PrismaAdminCatalogRepository();
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const searchParams = request.nextUrl.searchParams;
+    const page = parseInt(searchParams.get("page") || "1");
+    const limit = parseInt(searchParams.get("limit") || "10");
+    const search = searchParams.get("search") || "";
+
     const useCase = new GetAdminCategoriesUseCase(adminRepo);
-    const categories = await useCase.execute();
-    return NextResponse.json(categories);
+    const result = await useCase.execute({ page, limit, search });
+    
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Error al obtener las categorías (Admin):", error);
     return NextResponse.json(

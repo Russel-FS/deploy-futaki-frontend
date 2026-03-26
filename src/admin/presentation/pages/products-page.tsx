@@ -1,21 +1,48 @@
-import React, { useState } from "react";
-import { Plus, Search, Edit2, Package, Filter } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import {
+  Plus,
+  Search,
+  Edit2,
+  Package,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import Image from "next/image";
-import { cn } from "@/shared/lib/utils";
 import { AdminModal } from "../components/admin-modal";
 import { ProductForm } from "../components/product-form";
 import { useProducts, useToggleProductActive } from "../hooks/use-products";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/ui/button";
 import { ProductRowSkeleton } from "@/shared/ui/skeleton";
+import { cn } from "@/shared/lib/utils";
+import { useDebounce } from "@/shared/hooks/use-debounce";
 import { Switch } from "@/shared/ui/switch";
-import { useQueryClient } from "@tanstack/react-query";
-import { toast } from "@/shared/ui/toast";
 
 export const ProductsPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
-  const { data: products = [], isLoading, error } = useProducts();
+
+  // Estados para paginaciÃ³n y bÃºsqueda
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+
+  // Resetear a la pÃ¡gina 1 al buscar
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  const { data, isLoading, error } = useProducts({
+    page,
+    search: debouncedSearch,
+    limit: 10,
+  });
+
+  const products = data?.data || [];
+  const total = data?.total || 0;
+  const totalPages = Math.ceil(total / 10);
+
   const toggleMutation = useToggleProductActive();
 
   const handleOpenCreate = () => {
@@ -35,7 +62,7 @@ export const ProductsPageContent = () => {
   if (error) {
     return (
       <div className="p-12 text-center bg-red-50  rounded-3xl border border-red-200  text-red-600  font-bold">
-        Error al cargar los productos del catálogo.
+        Error al cargar los productos del catalogo.
       </div>
     );
   }
@@ -70,6 +97,8 @@ export const ProductsPageContent = () => {
             />
             <input
               type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar por nombre, modelo o SKU..."
               className="w-full bg-system-gray-6/50  border-none rounded-xl py-2.5 pl-11 pr-4 text-[13px] focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all font-medium placeholder:text-secondary/30"
             />
@@ -92,18 +121,22 @@ export const ProductsPageContent = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/10">
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {isLoading ? (
                   <ProductRowSkeleton rows={6} />
                 ) : products.length === 0 ? (
-                  <tr>
+                  <motion.tr
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
                     <td
                       colSpan={5}
                       className="px-8 py-20 text-center text-secondary font-black text-[10px] uppercase italic opacity-30 tracking-widest"
                     >
                       No se encontraron activos
                     </td>
-                  </tr>
+                  </motion.tr>
                 ) : (
                   products.map((product, idx) => (
                     <motion.tr
@@ -145,7 +178,7 @@ export const ProductsPageContent = () => {
                       </td>
                       <td className="px-8 py-4">
                         <span className="text-secondary text-[11px] font-semibold bg-system-gray-6  px-2.5 py-0.5 rounded-full border border-border/10">
-                          {product.category?.name || "Sin Categoría"}
+                          {product.category?.name || "Sin CategorÃ­a"}
                         </span>
                       </td>
                       <td className="px-8 py-4 text-right">
@@ -192,6 +225,36 @@ export const ProductsPageContent = () => {
               </AnimatePresence>
             </tbody>
           </table>
+        </div>
+
+        {/* Paginación */}
+        <div className="p-4 border-t border-border/10 bg-system-gray-6/20 flex items-center justify-between">
+          <p className="text-[11px] font-semibold text-secondary/40 ml-4">
+            Mostrando {products.length} de {total} resultados
+          </p>
+          <div className="flex items-center gap-2 mr-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={page === 1}
+              onClick={() => setPage((p) => p - 1)}
+              className="p-2 h-9 w-9 rounded-full"
+            >
+              <ChevronLeft size={16} />
+            </Button>
+            <span className="text-[12px] font-bold text-foreground mx-2 w-4 text-center">
+              {page}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              className="p-2 h-9 w-9 rounded-full"
+            >
+              <ChevronRight size={16} />
+            </Button>
+          </div>
         </div>
       </div>
 

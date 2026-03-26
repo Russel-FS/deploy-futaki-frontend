@@ -13,11 +13,26 @@ export interface Product {
   };
 }
 
-export const useProducts = () => {
-  return useQuery<Product[]>({
-    queryKey: ["products"],
-    queryFn: () =>
-      fetch("/api/admin/catalog/products").then((res) => res.json()),
+export interface PaginatedProductResponse {
+  data: Product[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export const useProducts = (params: { page?: number; limit?: number; search?: string } = {}) => {
+  const { page = 1, limit = 10, search = "" } = params;
+
+  return useQuery<PaginatedProductResponse>({
+    queryKey: ["products", { page, limit, search }],
+    queryFn: () => {
+      const url = new URL("/api/admin/catalog/products", window.location.origin);
+      url.searchParams.set("page", page.toString());
+      url.searchParams.set("limit", limit.toString());
+      if (search) url.searchParams.set("search", search);
+
+      return fetch(url.toString()).then((res) => res.json());
+    },
   });
 };
 
@@ -39,8 +54,8 @@ export const useToggleProductActive = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
       toast.success(
         variables.isActive
-          ? "Producto activado correctamente"
-          : "Producto desactivado correctamente",
+          ? "Producto activada correctamente"
+          : "Producto desactivada correctamente",
       );
     },
     onError: () => {

@@ -3,15 +3,15 @@ import { Product, Category } from "@/catalog/domain/entities/catalog.entity";
 
 export class GetAdminProductsUseCase {
   constructor(private catalogRepository: IAdminCatalogRepository) {}
-  async execute() {
-    return this.catalogRepository.getProducts();
+  async execute(params: { page?: number; limit?: number; search?: string } = {}) {
+    return this.catalogRepository.getProducts(params);
   }
 }
 
 export class GetAdminCategoriesUseCase {
   constructor(private catalogRepository: IAdminCatalogRepository) {}
-  async execute() {
-    return this.catalogRepository.getCategories();
+  async execute(params: { page?: number; limit?: number; search?: string } = {}) {
+    return this.catalogRepository.getCategories(params);
   }
 }
 

@@ -1,26 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Plus,
   Search,
   Edit2,
   Filter,
   Image as ImageIcon,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { AdminModal } from "../components/admin-modal";
 import { CategoryForm } from "../components/category-form";
-import { useCategories, useToggleCategoryActive } from "../hooks/use-categories";
+import {
+  useCategories,
+  useToggleCategoryActive,
+} from "../hooks/use-categories";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button";
 import { CategoryRowSkeleton } from "@/shared/ui/skeleton";
 import { Switch } from "@/shared/ui/switch";
-import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/shared/lib/utils";
+import { useDebounce } from "@/shared/hooks/use-debounce";
 
 export const CategoriesPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
-  const { data: categories = [], isLoading, error } = useCategories();
+
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 500);
+
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  const { data, isLoading, error } = useCategories({
+    page,
+    search: debouncedSearch,
+    limit: 10,
+  });
+
+  const categories = data?.data || [];
+  const total = data?.total || 0;
+  const totalPages = Math.ceil(total / 10);
+
   const toggleMutation = useToggleCategoryActive();
 
   const handleOpenCreate = () => {
@@ -40,7 +63,7 @@ export const CategoriesPageContent = () => {
   if (error) {
     return (
       <div className="p-12 text-center bg-red-50 rounded-3xl border border-red-200 text-red-600 font-bold">
-        Error al cargar las categorías del sistema.
+        Error al cargar las categorÃ­as del sistema.
       </div>
     );
   }
@@ -75,6 +98,8 @@ export const CategoriesPageContent = () => {
             />
             <input
               type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar categoría o descripción..."
               className="w-full bg-system-gray-6/50   border-none rounded-full py-2.5 pl-11 pr-4 text-[13px] focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all font-medium placeholder:text-secondary/30"
             />
@@ -96,18 +121,22 @@ export const CategoriesPageContent = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-border/10">
-              <AnimatePresence>
+              <AnimatePresence mode="wait">
                 {isLoading ? (
                   <CategoryRowSkeleton rows={5} />
                 ) : categories.length === 0 ? (
-                  <tr>
+                  <motion.tr
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
                     <td
                       colSpan={4}
                       className="px-8 py-20 text-center text-secondary font-black text-[10px] uppercase italic opacity-30 tracking-widest"
                     >
                       Sin registros disponibles
                     </td>
-                  </tr>
+                  </motion.tr>
                 ) : (
                   categories.map((category, idx) => (
                     <motion.tr
@@ -144,7 +173,7 @@ export const CategoriesPageContent = () => {
                       </td>
                       <td className="px-8 py-4">
                         <div className="text-secondary font-medium text-[12px] line-clamp-1 max-w-md opacity-50 italic">
-                          {category.description || "Sin descripción"}
+                          {category.description || "Sin descripciÃ³n"}
                         </div>
                       </td>
                       <td className="px-8 py-4 text-right">
@@ -152,10 +181,7 @@ export const CategoriesPageContent = () => {
                           <Switch
                             checked={category.isActive}
                             onChange={() =>
-                              handleToggleActive(
-                                category.id,
-                                category.isActive,
-                              )
+                              handleToggleActive(category.id, category.isActive)
                             }
                             disabled={toggleMutation.isPending}
                           />
@@ -175,6 +201,36 @@ export const CategoriesPageContent = () => {
               </AnimatePresence>
             </tbody>
           </table>
+        </div>
+
+        {/* Paginación */}
+        <div className="p-4 border-t border-border/10 bg-system-gray-6/20 flex items-center justify-between">
+          <p className="text-[11px] font-semibold text-secondary/40 ml-4">
+            Mostrando {categories.length} de {total} resultados
+          </p>
+          <div className="flex items-center gap-2 mr-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={page === 1}
+              onClick={() => setPage((p) => p - 1)}
+              className="p-2 h-9 w-9 rounded-full"
+            >
+              <ChevronLeft size={16} />
+            </Button>
+            <span className="text-[12px] font-bold text-foreground mx-2 w-4 text-center">
+              {page}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              disabled={page >= totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              className="p-2 h-9 w-9 rounded-full"
+            >
+              <ChevronRight size={16} />
+            </Button>
+          </div>
         </div>
       </div>
 

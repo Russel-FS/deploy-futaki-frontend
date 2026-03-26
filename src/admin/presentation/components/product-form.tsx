@@ -36,7 +36,8 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
     initialData?.imageUrl || null,
   );
 
-  const { data: categories = [] } = useCategories();
+  const { data: categoryResponse } = useCategories({ limit: 100 });
+  const categories = categoryResponse?.data || [];
   const mutation = useSaveProduct();
 
   const handleAddSpec = () => {
