@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 /**
  * Hook para obtener categorias
@@ -22,6 +22,7 @@ export const usePublicProducts = (categoryId?: string) => {
         : "/api/catalog/products";
       return fetch(url).then((res) => res.json());
     },
+    placeholderData: keepPreviousData,
   });
 };
 

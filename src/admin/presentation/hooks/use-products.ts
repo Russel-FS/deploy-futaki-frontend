@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { toast } from "@/shared/ui/toast";
 
 export interface Product {
@@ -33,6 +33,7 @@ export const useProducts = (params: { page?: number; limit?: number; search?: st
 
       return fetch(url.toString()).then((res) => res.json());
     },
+    placeholderData: keepPreviousData,
   });
 };
 

@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
 import { toast } from "@/shared/ui/toast";
 
 export interface Category {
@@ -29,6 +29,7 @@ export const useCategories = (params: { page?: number; limit?: number; search?: 
       
       return fetch(url.toString()).then((res) => res.json());
     },
+    placeholderData: keepPreviousData,
   });
 };
 
