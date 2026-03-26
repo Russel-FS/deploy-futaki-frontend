@@ -42,17 +42,3 @@ export class UpdateProductUseCase {
     return this.repository.updateProduct(id, data);
   }
 }
-
-export class ToggleProductActiveUseCase {
-  constructor(private repository: IAdminCatalogRepository) {}
-  async execute(id: string, isActive: boolean): Promise<Product> {
-    return this.repository.toggleProductActive(id, isActive);
-  }
-}
-
-export class ToggleCategoryActiveUseCase {
-  constructor(private repository: IAdminCatalogRepository) {}
-  async execute(id: string, isActive: boolean): Promise<Category> {
-    return this.repository.toggleCategoryActive(id, isActive);
-  }
-}

@@ -39,20 +39,6 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
     });
   }
 
-  async toggleCategoryActive(id: string, isActive: boolean): Promise<Category> {
-    try {
-      return await prisma.category.update({
-        where: { id },
-        data: { isActive },
-      });
-    } catch (error: any) {
-      if (error.code === "P2025") {
-        throw new Error(`Categoría con ID ${id} no encontrada`);
-      }
-      throw error;
-    }
-  }
-
   async getProducts(): Promise<Product[]> {
     return prisma.product.findMany({
       include: { category: true },
@@ -84,7 +70,7 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
 
   async updateProduct(id: string, data: any): Promise<Product> {
     const updateData = { ...data };
-    if (data.price) updateData.price = Number(data.price);
+    if (data.price !== undefined) updateData.price = Number(data.price);
     
     return prisma.product.update({
       where: { id },
@@ -105,20 +91,5 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
       include: { category: true },
       orderBy: { createdAt: "desc" },
     });
-  }
-
-  async toggleProductActive(id: string, isActive: boolean): Promise<Product> {
-    try {
-      return await prisma.product.update({
-        where: { id },
-        data: { isActive },
-        include: { category: true },
-      });
-    } catch (error: any) {
-      if (error.code === "P2025") {
-        throw new Error(`Producto con ID ${id} no encontrado`);
-      }
-      throw error;
-    }
   }
 }
