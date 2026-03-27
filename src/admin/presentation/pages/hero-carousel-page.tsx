@@ -26,6 +26,7 @@ export const HeroCarouselPage = () => {
   const [isCreating, setIsCreating] = useState(false);
   const [previewIndex, setPreviewIndex] = useState(0);
   const [draftData, setDraftData] = useState<any>(null);
+  const [isConfirmingDelete, setIsConfirmingDelete] = useState(false);
 
   const { data: slides = [], isLoading } = useSlides();
   const deleteMutation = useDeleteSlide();
@@ -80,13 +81,18 @@ export const HeroCarouselPage = () => {
    * @returns void
    */
   const handleDelete = (id: string) => {
-    if (confirm("¿Estás seguro de eliminar este banner?")) {
-      deleteMutation.mutate(id);
-      if (selectedSlide?.id === id) {
-        setSelectedSlide(null);
-        setPreviewIndex(0);
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        setIsConfirmingDelete(false);
+        if (selectedSlide?.id === id) {
+          setSelectedSlide(null);
+          setPreviewIndex(0);
+        }
+      },
+      onError: () => {
+        setIsConfirmingDelete(false);
       }
-    }
+    });
   };
 
   if (isLoading) {
@@ -326,14 +332,40 @@ export const HeroCarouselPage = () => {
                   Esta acción no se puede deshacer
                 </span>
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => handleDelete(selectedSlide.id)}
-                className="text-red-500 hover:bg-red-500 hover:text-white rounded-full h-9 font-bold text-[11px]"
-              >
-                Eliminar Slide
-              </Button>
+              {isConfirmingDelete ? (
+                <div className="flex gap-2 animate-in fade-in zoom-in duration-200">
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    disabled={deleteMutation.isPending}
+                    onClick={() => handleDelete(selectedSlide.id)}
+                    className="rounded-full h-9 font-bold text-[10px] px-4"
+                  >
+                    {deleteMutation.isPending ? "Eliminando..." : "Confirmar"}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    disabled={deleteMutation.isPending}
+                    onClick={() => setIsConfirmingDelete(false)}
+                    className="rounded-full h-9 font-bold text-[10px] px-4 bg-system-gray-6"
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setIsConfirmingDelete(true);
+                  }}
+                  className="text-red-500 hover:bg-red-500 hover:text-white rounded-full h-9 font-bold text-[11px]"
+                >
+                  Eliminar Slide
+                </Button>
+              )}
             </motion.div>
           )}
         </div>
