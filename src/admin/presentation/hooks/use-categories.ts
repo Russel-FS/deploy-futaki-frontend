@@ -7,6 +7,7 @@ import {
 import { toast } from "@/shared/ui/toast";
 import { ADMIN_QUERY_KEYS } from "../constants/query-keys";
 import { PUBLIC_QUERY_KEYS } from "@/catalog/presentation/constants/query-keys";
+import { extractErrorMessage } from "@/shared/utils/error-handler";
 
 export interface Category {
   id: string;
@@ -70,7 +71,13 @@ export const useToggleCategoryActive = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isActive }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const msg = await extractErrorMessage(
+          res,
+          "No se pudo actualizar el estado de la categoría.",
+        );
+        throw new Error(msg);
+      }
       return res.json();
     },
     onSuccess: (_, variables) => {
@@ -95,8 +102,10 @@ export const useToggleCategoryActive = () => {
           : "Categoría desactivada correctamente",
       );
     },
-    onError: () => {
-      toast.error("No se pudo actualizar el estado de la categoría");
+    onError: (error: Error) => {
+      toast.error(
+        error.message || "No se pudo actualizar el estado de la categoría.",
+      );
     },
   });
 };
@@ -117,7 +126,13 @@ export const useToggleCategoryFeatured = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isFeatured }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const msg = await extractErrorMessage(
+          res,
+          "No se pudo actualizar el estado destacado.",
+        );
+        throw new Error(msg);
+      }
       return res.json();
     },
     onSuccess: (_, variables) => {
@@ -139,8 +154,10 @@ export const useToggleCategoryFeatured = () => {
           : "Categoría quitada de destacados",
       );
     },
-    onError: () => {
-      toast.error("No se pudo actualizar el estado destacado");
+    onError: (error: Error) => {
+      toast.error(
+        error.message || "No se pudo actualizar el estado destacado.",
+      );
     },
   });
 };
@@ -173,7 +190,13 @@ export const useSaveCategory = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const msg = await extractErrorMessage(
+          res,
+          "Ocurrió un error al guardar la categoría.",
+        );
+        throw new Error(msg);
+      }
       return res.json();
     },
     onSuccess: (_, variables) => {
@@ -198,8 +221,8 @@ export const useSaveCategory = () => {
           : "Categoría creada correctamente.",
       );
     },
-    onError: () => {
-      toast.error("Ocurrió un error al guardar la categoría.");
+    onError: (error: Error) => {
+      toast.error(error.message || "Ocurrió un error al guardar la categoría.");
     },
   });
 };

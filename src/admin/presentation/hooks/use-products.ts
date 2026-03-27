@@ -7,6 +7,7 @@ import {
 import { toast } from "@/shared/ui/toast";
 import { ADMIN_QUERY_KEYS } from "../constants/query-keys";
 import { PUBLIC_QUERY_KEYS } from "@/catalog/presentation/constants/query-keys";
+import { extractErrorMessage } from "@/shared/utils/error-handler";
 
 export interface Product {
   id: string;
@@ -75,7 +76,13 @@ export const useToggleProductActive = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isActive }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const msg = await extractErrorMessage(
+          res,
+          "No se pudo actualizar el estado del producto.",
+        );
+        throw new Error(msg);
+      }
       return res.json();
     },
     onSuccess: (_, variables) => {
@@ -96,12 +103,14 @@ export const useToggleProductActive = () => {
       });
       toast.success(
         variables.isActive
-          ? "Producto activada correctamente"
-          : "Producto desactivada correctamente",
+          ? "Producto activado correctamente"
+          : "Producto desactivado correctamente",
       );
     },
-    onError: () => {
-      toast.error("No se pudo actualizar el estado del producto");
+    onError: (error: Error) => {
+      toast.error(
+        error.message || "No se pudo actualizar el estado del producto.",
+      );
     },
   });
 };
@@ -122,7 +131,13 @@ export const useToggleProductFeatured = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isFeatured }),
       });
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const msg = await extractErrorMessage(
+          res,
+          "No se pudo actualizar el estado destacado.",
+        );
+        throw new Error(msg);
+      }
       return res.json();
     },
     onSuccess: (_, variables) => {
@@ -144,8 +159,10 @@ export const useToggleProductFeatured = () => {
           : "Producto quitado de destacados",
       );
     },
-    onError: () => {
-      toast.error("No se pudo actualizar el estado destacado");
+    onError: (error: Error) => {
+      toast.error(
+        error.message || "No se pudo actualizar el estado destacado.",
+      );
     },
   });
 };
@@ -177,7 +194,13 @@ export const useSaveProduct = () => {
         headers: { "Content-Type": "application/json" },
       });
 
-      if (!res.ok) throw new Error();
+      if (!res.ok) {
+        const msg = await extractErrorMessage(
+          res,
+          "Ocurrió un error al guardar el producto.",
+        );
+        throw new Error(msg);
+      }
       return res.json();
     },
     onSuccess: (_, variables) => {
@@ -207,8 +230,8 @@ export const useSaveProduct = () => {
           : "Producto registrado correctamente.",
       );
     },
-    onError: () => {
-      toast.error("Ocurrio un error al guardar el producto.");
+    onError: (error: Error) => {
+      toast.error(error.message || "Ocurrió un error al guardar el producto.");
     },
   });
 };
