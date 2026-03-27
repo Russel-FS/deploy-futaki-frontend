@@ -74,11 +74,21 @@ export const useToggleCategoryActive = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED,
+      });
       toast.success(
         variables.isActive
           ? "Categoría activada correctamente"
@@ -111,10 +121,18 @@ export const useToggleCategoryFeatured = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED,
+      });
       toast.success(
         variables.isFeatured
           ? "Categoría destacada correctamente"
@@ -159,11 +177,21 @@ export const useSaveCategory = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED,
+      });
       toast.success(
         variables.id
           ? "Categoría actualizada correctamente."

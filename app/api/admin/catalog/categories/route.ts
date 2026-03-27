@@ -4,6 +4,7 @@ import {
   GetAdminCategoriesUseCase,
   CreateCategoryUseCase,
 } from "@/catalog/application/use-cases/admin/admin.use-cases";
+import { validateCreateCategory } from "@/catalog/application/validation/catalog.validation";
 
 const adminRepo = new PrismaAdminCatalogRepository();
 
@@ -14,9 +15,22 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "10");
     const search = searchParams.get("search") || "";
 
+    if (isNaN(page) || page < 1) {
+      return NextResponse.json(
+        { error: "El parámetro 'page' debe ser un número positivo." },
+        { status: 400 },
+      );
+    }
+    if (isNaN(limit) || limit < 1 || limit > 100) {
+      return NextResponse.json(
+        { error: "El parámetro 'limit' debe ser un número entre 1 y 100." },
+        { status: 400 },
+      );
+    }
+
     const useCase = new GetAdminCategoriesUseCase(adminRepo);
     const result = await useCase.execute({ page, limit, search });
-    
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error al obtener las categorías (Admin):", error);
@@ -30,6 +44,12 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   try {
     const data = await request.json();
+
+    const { errors } = validateCreateCategory(data);
+    if (errors.length > 0) {
+      return NextResponse.json({ errors }, { status: 422 });
+    }
+
     const useCase = new CreateCategoryUseCase(adminRepo);
     const category = await useCase.execute(data);
     return NextResponse.json(category, { status: 201 });

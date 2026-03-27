@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import { toast } from "@/shared/ui/toast";
 import { ADMIN_QUERY_KEYS } from "../constants/query-keys";
 import { PUBLIC_QUERY_KEYS } from "@/catalog/presentation/constants/query-keys";
@@ -38,13 +43,18 @@ export const useProductMetrics = () => {
   });
 };
 
-export const useProducts = (params: { page?: number; limit?: number; search?: string } = {}) => {
+export const useProducts = (
+  params: { page?: number; limit?: number; search?: string } = {},
+) => {
   const { page = 1, limit = 10, search = "" } = params;
 
   return useQuery<PaginatedProductResponse>({
     queryKey: [...ADMIN_QUERY_KEYS.PRODUCTS.ALL, { page, limit, search }],
     queryFn: () => {
-      const url = new URL("/api/admin/catalog/products", window.location.origin);
+      const url = new URL(
+        "/api/admin/catalog/products",
+        window.location.origin,
+      );
       url.searchParams.set("page", page.toString());
       url.searchParams.set("limit", limit.toString());
       if (search) url.searchParams.set("search", search);
@@ -69,11 +79,21 @@ export const useToggleProductActive = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.PRODUCTS.ALL });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.PRODUCTS.METRICS });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.ALL });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.FEATURED });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.PRODUCTS.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.PRODUCTS.METRICS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.FEATURED,
+      });
       toast.success(
         variables.isActive
           ? "Producto activada correctamente"
@@ -90,7 +110,13 @@ export const useToggleProductFeatured = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, isFeatured }: { id: string; isFeatured: boolean }) => {
+    mutationFn: async ({
+      id,
+      isFeatured,
+    }: {
+      id: string;
+      isFeatured: boolean;
+    }) => {
       const res = await fetch(`/api/admin/catalog/products/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -100,10 +126,18 @@ export const useToggleProductFeatured = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.PRODUCTS.ALL });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.PRODUCTS.METRICS });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.ALL });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.FEATURED });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.PRODUCTS.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.PRODUCTS.METRICS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.FEATURED,
+      });
       toast.success(
         variables.isFeatured
           ? "Producto destacado correctamente"
@@ -147,13 +181,25 @@ export const useSaveProduct = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.PRODUCTS.ALL });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.PRODUCTS.METRICS });
-      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.ALL });
-      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.FEATURED });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.PRODUCTS.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.PRODUCTS.METRICS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.ALL,
+      });
+      queryClient.invalidateQueries({
+        queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.FEATURED,
+      });
       if (variables.id) {
-        queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.DETAIL(variables.id) });
+        queryClient.invalidateQueries({
+          queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.DETAIL(variables.id),
+        });
       }
       toast.success(
         variables.id
@@ -162,7 +208,7 @@ export const useSaveProduct = () => {
       );
     },
     onError: () => {
-      toast.error("OcurriÃ³ un error al guardar el producto.");
+      toast.error("Ocurrio un error al guardar el producto.");
     },
   });
 };
