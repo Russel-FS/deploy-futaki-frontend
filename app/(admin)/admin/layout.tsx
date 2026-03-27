@@ -21,7 +21,7 @@ export default function AdminLayout({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="relative px-6 py-10 lg:px-12 lg:py-16 max-w-7xl mx-auto"
+            className="relative px-6 py-10 lg:px-12 lg:py-16 mx-auto"
           >
             {children}
           </motion.div>
