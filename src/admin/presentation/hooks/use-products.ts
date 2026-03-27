@@ -15,6 +15,7 @@ export interface Product {
   price: number;
   stock: number;
   imageUrl?: string;
+  pdfUrl?: string;
   isFeatured: boolean;
   isActive: boolean;
   category: {
@@ -179,6 +180,7 @@ export const useSaveProduct = () => {
       stock: number;
       categoryId: string;
       imageUrl?: string | null;
+      pdfUrl?: string | null;
       isFeatured?: boolean;
       specs?: any[];
     }) => {

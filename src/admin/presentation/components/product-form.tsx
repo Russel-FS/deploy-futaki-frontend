@@ -7,6 +7,7 @@ import {
   Package,
   Loader2,
   Trash2,
+  FileText,
 } from "lucide-react";
 import Image from "next/image";
 import { useCategories } from "../hooks/use-categories";
@@ -29,6 +30,7 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
     stock: initialData?.stock?.toString() || "",
     categoryId: initialData?.categoryId || "",
     isFeatured: initialData?.isFeatured || false,
+    pdfUrl: initialData?.pdfUrl || null,
   });
   const [specs, setSpecs] = useState<{ label: string; value: string }[]>(
     initialData?.specs || [],
@@ -36,6 +38,10 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     initialData?.imageUrl || null,
+  );
+  const [selectedPdf, setSelectedPdf] = useState<File | null>(null);
+  const [currentPdfUrl, setCurrentPdfUrl] = useState<string | null>(
+    initialData?.pdfUrl || null,
   );
 
   const { data: categoryResponse } = useCategories({ limit: 100 });
@@ -74,6 +80,17 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
     setPreviewUrl(null);
   };
 
+  const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setSelectedPdf(file);
+  };
+
+  const handleRemovePdf = () => {
+    setSelectedPdf(null);
+    setCurrentPdfUrl(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -95,12 +112,30 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
       }
     }
 
+    let pdfUrl = currentPdfUrl;
+    if (selectedPdf) {
+      const body = new FormData();
+      body.append("file", selectedPdf);
+      try {
+        const uploadRes = await fetch("/api/admin/catalog/products/upload-document", {
+          method: "POST",
+          body,
+        });
+        const uploadData = await uploadRes.json();
+        pdfUrl = uploadData.url;
+      } catch (error) {
+        toast.error("Error al subir el PDF.");
+        return;
+      }
+    }
+
     mutation.mutate({
       id: initialData?.id,
       ...formData,
       price: parseFloat(formData.price),
       stock: parseInt(formData.stock),
       imageUrl,
+      pdfUrl,
       specs,
     }, {
       onSuccess: () => onSuccess()
@@ -228,6 +263,49 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
           checked={formData.isFeatured} 
           onChange={(val) => setFormData(prev => ({ ...prev, isFeatured: val }))} 
         />
+      </div>
+
+      {/* Documentación PDF (Solo Admin) */}
+      <div className="space-y-3">
+        <label className="text-[11px] font-semibold text-secondary/50 ml-1">
+          Ficha Técnica (PDF Interno)
+        </label>
+        <div className="flex items-center gap-4 p-4 bg-system-gray-6/30 rounded-2xl border border-border/5">
+          <div className="h-10 w-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-500">
+            <FileText size={20} />
+          </div>
+          <div className="flex-1 min-w-0">
+            {selectedPdf ? (
+              <p className="text-[13px] font-medium truncate">{selectedPdf.name}</p>
+            ) : currentPdfUrl ? (
+              <p className="text-[13px] font-medium truncate text-primary/80">Archivo cargado correctamente</p>
+            ) : (
+              <p className="text-[13px] font-medium text-secondary/40 italic">Ningún documento PDF seleccionado</p>
+            )}
+            <p className="text-[10px] text-secondary/60">Solo archivos PDF (Máx. 10MB)</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {(selectedPdf || currentPdfUrl) && (
+              <button
+                type="button"
+                onClick={handleRemovePdf}
+                className="p-1.5 text-secondary/40 hover:text-red-500 transition-colors"
+                title="Quitar PDF"
+              >
+                <X size={16} />
+              </button>
+            )}
+            <label className="px-4 py-2 bg-primary/10 hover:bg-primary/20 text-primary rounded-xl text-[12px] font-semibold cursor-pointer transition-colors active:scale-95">
+              {selectedPdf || currentPdfUrl ? "Cambiar" : "Seleccionar"}
+              <input
+                type="file"
+                className="hidden"
+                accept="application/pdf"
+                onChange={handlePdfChange}
+              />
+            </label>
+          </div>
+        </div>
       </div>
 
       {/* Especificaciones */}

@@ -21,6 +21,7 @@ export interface Product {
   price: number;
   stock: number;
   imageUrl?: string | null;
+  pdfUrl?: string | null;
   specs?: ProductSpec[] | any | null;
   categoryId: string;
   category?: Category;

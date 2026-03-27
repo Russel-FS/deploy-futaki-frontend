@@ -12,6 +12,7 @@ export interface ProductInput {
   stock?: unknown;
   categoryId?: unknown;
   imageUrl?: unknown;
+  pdfUrl?: unknown;
   isFeatured?: unknown;
   isActive?: unknown;
   specs?: unknown;
@@ -40,6 +41,8 @@ const ALLOWED_IMAGE_TYPES = [
   "image/gif",
   "image/avif",
 ];
+
+const ALLOWED_DOC_TYPES = ["application/pdf"];
 
 const MAX_FILE_SIZE_MB = 10;
 const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
@@ -135,6 +138,13 @@ export const validateCreateProduct = (
     }
   }
 
+  // pdf url (opcional)
+  if (data.pdfUrl !== undefined && data.pdfUrl !== null && data.pdfUrl !== "") {
+    if (!isValidUrl(data.pdfUrl)) {
+      errors.push("La URL del PDF no es válida.");
+    }
+  }
+
   return { errors };
 };
 
@@ -206,6 +216,12 @@ export const validateUpdateProduct = (
   ) {
     if (!isValidUrl(data.imageUrl)) {
       errors.push("La URL de la imagen no es válida.");
+    }
+  }
+
+  if (data.pdfUrl !== undefined && data.pdfUrl !== null && data.pdfUrl !== "") {
+    if (!isValidUrl(data.pdfUrl)) {
+      errors.push("La URL del PDF no es válida.");
     }
   }
 
@@ -315,6 +331,34 @@ export const validateImageFile = (file: File): { errors: string[] } => {
     const sizeMB = (file.size / 1024 / 1024).toFixed(1);
     errors.push(
       `El archivo es demasiado grande (${sizeMB} MB). El límite es ${MAX_FILE_SIZE_MB} MB.`,
+    );
+  }
+
+  if (file.size === 0) {
+    errors.push("El archivo está vacío.");
+  }
+
+  return { errors };
+};
+
+/**
+ * Método para validar un archivo PDF
+ * @param file Archivo PDF
+ * @returns Array de errores
+ */
+export const validatePdfFile = (file: File): { errors: string[] } => {
+  const errors: string[] = [];
+
+  if (!ALLOWED_DOC_TYPES.includes(file.type)) {
+    errors.push(
+      `Tipo de archivo no permitido (${file.type}). Solo se aceptan archivos PDF.`,
+    );
+  }
+
+  if (file.size > MAX_FILE_SIZE_BYTES) {
+    const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+    errors.push(
+      `El archivo es demasiado grande (${sizeMB} MB). El límite para documentos es de ${MAX_FILE_SIZE_MB} MB.`,
     );
   }
 
