@@ -7,6 +7,19 @@ export interface PaginatedResult<T> {
   limit: number;
 }
 
+export interface CategoryMetrics {
+  total: number;
+  active: number;
+  featured: number;
+}
+
+export interface ProductMetrics {
+  total: number;
+  active: number;
+  featured: number;
+  lowStock: number;
+}
+
 export interface IAdminCatalogRepository {
   // Categorías
   getCategories(params: {
@@ -19,6 +32,7 @@ export interface IAdminCatalogRepository {
   createCategory(data: Partial<Category>): Promise<Category>;
   updateCategory(id: string, data: Partial<Category>): Promise<Category>;
   deleteCategory(id: string): Promise<void>;
+  getCategoryMetrics(): Promise<CategoryMetrics>;
 
   // Productos
   getProducts(params: {
@@ -32,4 +46,5 @@ export interface IAdminCatalogRepository {
   updateProduct(id: string, data: Partial<Product>): Promise<Product>;
   deleteProduct(id: string): Promise<void>;
   getProductsByCategory(categoryId: string): Promise<Product[]>;
+  getProductMetrics(): Promise<ProductMetrics>;
 }

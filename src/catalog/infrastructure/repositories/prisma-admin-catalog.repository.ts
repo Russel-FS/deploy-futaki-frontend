@@ -1,5 +1,10 @@
 import { prisma } from "@/shared/lib/prisma";
-import { IAdminCatalogRepository, PaginatedResult } from "@/catalog/domain/repositories/admin-catalog.repository";
+import {
+  IAdminCatalogRepository,
+  PaginatedResult,
+  CategoryMetrics,
+  ProductMetrics,
+} from "@/catalog/domain/repositories/admin-catalog.repository";
 import { Category, Product } from "@/catalog/domain/entities/catalog.entity";
 
 export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
@@ -60,6 +65,15 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
     });
   }
 
+  async getCategoryMetrics(): Promise<CategoryMetrics> {
+    const [total, active, featured] = await Promise.all([
+      prisma.category.count(),
+      prisma.category.count({ where: { isActive: true } }),
+      prisma.category.count({ where: { isFeatured: true } }),
+    ]);
+    return { total, active, featured };
+  }
+
   async getProducts(params: {
     page?: number;
     limit?: number;
@@ -69,11 +83,11 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
     const skip = (page - 1) * limit;
 
     const where = search
-      ? { 
+      ? {
           OR: [
             { name: { contains: search, mode: "insensitive" as any } },
-            { description: { contains: search, mode: "insensitive" as any } }
-          ]
+            { description: { contains: search, mode: "insensitive" as any } },
+          ],
         }
       : {};
 
@@ -118,10 +132,10 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
   async updateProduct(id: string, data: any): Promise<Product> {
     const { id: _, category: __, ...rest } = data;
     const updateData = { ...rest };
-    
+
     if (data.price !== undefined) updateData.price = Number(data.price);
     if (data.stock !== undefined) updateData.stock = Number(data.stock);
-    
+
     return prisma.product.update({
       where: { id },
       data: updateData,
@@ -141,5 +155,15 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
       include: { category: true },
       orderBy: { createdAt: "desc" },
     });
+  }
+
+  async getProductMetrics(): Promise<ProductMetrics> {
+    const [total, active, featured, lowStock] = await Promise.all([
+      prisma.product.count(),
+      prisma.product.count({ where: { isActive: true } }),
+      prisma.product.count({ where: { isFeatured: true } }),
+      prisma.product.count({ where: { stock: { lte: 10 } } }),
+    ]);
+    return { total, active, featured, lowStock };
   }
 }

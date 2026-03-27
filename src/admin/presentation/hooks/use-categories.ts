@@ -1,4 +1,9 @@
-import { useQuery, useMutation, useQueryClient, keepPreviousData } from "@tanstack/react-query";
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import { toast } from "@/shared/ui/toast";
 
 export interface Category {
@@ -17,17 +22,36 @@ export interface PaginatedCategoryResponse {
   limit: number;
 }
 
-export const useCategories = (params: { page?: number; limit?: number; search?: string } = {}) => {
+export interface CategoryMetrics {
+  total: number;
+  active: number;
+  featured: number;
+}
+
+export const useCategoryMetrics = () => {
+  return useQuery<{ data: CategoryMetrics }>({
+    queryKey: ["category-metrics"],
+    queryFn: () =>
+      fetch("/api/admin/catalog/categories/metrics").then((res) => res.json()),
+  });
+};
+
+export const useCategories = (
+  params: { page?: number; limit?: number; search?: string } = {},
+) => {
   const { page = 1, limit = 10, search = "" } = params;
-  
+
   return useQuery<PaginatedCategoryResponse>({
     queryKey: ["categories", { page, limit, search }],
     queryFn: () => {
-      const url = new URL("/api/admin/catalog/categories", window.location.origin);
+      const url = new URL(
+        "/api/admin/catalog/categories",
+        window.location.origin,
+      );
       url.searchParams.set("page", page.toString());
       url.searchParams.set("limit", limit.toString());
       if (search) url.searchParams.set("search", search);
-      
+
       return fetch(url.toString()).then((res) => res.json());
     },
     placeholderData: keepPreviousData,
@@ -66,7 +90,13 @@ export const useToggleCategoryFeatured = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, isFeatured }: { id: string; isFeatured: boolean }) => {
+    mutationFn: async ({
+      id,
+      isFeatured,
+    }: {
+      id: string;
+      isFeatured: boolean;
+    }) => {
       const res = await fetch(`/api/admin/catalog/categories/${id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

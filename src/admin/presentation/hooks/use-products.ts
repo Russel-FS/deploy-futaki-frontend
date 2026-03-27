@@ -21,6 +21,21 @@ export interface PaginatedProductResponse {
   limit: number;
 }
 
+export interface ProductMetrics {
+  total: number;
+  active: number;
+  featured: number;
+  lowStock: number;
+}
+
+export const useProductMetrics = () => {
+  return useQuery<{ data: ProductMetrics }>({
+    queryKey: ["product-metrics"],
+    queryFn: () =>
+      fetch("/api/admin/catalog/products/metrics").then((res) => res.json()),
+  });
+};
+
 export const useProducts = (params: { page?: number; limit?: number; search?: string } = {}) => {
   const { page = 1, limit = 10, search = "" } = params;
 

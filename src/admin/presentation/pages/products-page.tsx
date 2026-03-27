@@ -9,18 +9,26 @@ import {
   ChevronRight,
   Star,
   Plus,
+  AlertCircle,
+  CircleCheck,
 } from "lucide-react";
 import Image from "next/image";
 import { AdminModal } from "../components/admin-modal";
 import { ProductForm } from "../components/product-form";
-import { useProducts, useToggleProductActive, useToggleProductFeatured } from "../hooks/use-products";
+import {
+  useProducts,
+  useToggleProductActive,
+  useToggleProductFeatured,
+  useProductMetrics,
+} from "../hooks/use-products";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Button } from "@/shared/ui/button";
 import { ProductRowSkeleton } from "@/shared/ui/skeleton";
-import { cn } from "@/shared/lib/utils";
 import { useDebounce } from "@/shared/hooks/use-debounce";
 import { Switch } from "@/shared/ui/switch";
 import { MemphisEmptyState } from "@/shared/ui/memphis-empty-state";
+import { MetricCard } from "@/shared/ui/metric-card";
+import { cn } from "@/shared/lib/utils";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -52,6 +60,10 @@ export const ProductsPageContent = () => {
   useEffect(() => {
     setPage(1);
   }, [debouncedSearch]);
+
+  const { data: metricsData, isLoading: isLoadingMetrics } =
+    useProductMetrics();
+  const metrics = metricsData?.data;
 
   const { data, isLoading, error } = useProducts({
     page,
@@ -114,6 +126,44 @@ export const ProductsPageContent = () => {
         </Button>
       </div>
 
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <MetricCard
+          title="Total Productos"
+          value={metrics?.total || 0}
+          icon={<Package size={20} />}
+          isLoading={isLoadingMetrics}
+        />
+        <MetricCard
+          title="Catálogo Activo"
+          value={metrics?.active || 0}
+          icon={<CircleCheck size={20} />}
+          isLoading={isLoadingMetrics}
+          trend={
+            metrics?.active && metrics.active > 0
+              ? { value: "Visibles", isPositive: true }
+              : undefined
+          }
+        />
+        <MetricCard
+          title="Destacados en Home"
+          value={metrics?.featured || 0}
+          icon={<Star size={20} />}
+          isLoading={isLoadingMetrics}
+        />
+        <MetricCard
+          title="Stock Crítico"
+          value={metrics?.lowStock || 0}
+          icon={<AlertCircle size={20} />}
+          isLoading={isLoadingMetrics}
+          trend={
+            metrics?.lowStock && metrics.lowStock > 0
+              ? { value: "Requiere atención", isPositive: false }
+              : { value: "Óptimo", isNeutral: true }
+          }
+        />
+      </div>
+
       <div className="bg-white rounded-4xl border border-border/10 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-500">
         <div className="p-5 border-b border-border/10 bg-white flex flex-col md:flex-row items-center gap-4">
           <div className="relative flex-1 group w-full">
@@ -143,7 +193,7 @@ export const ProductsPageContent = () => {
                 <th className="px-8 py-5 text-right w-32">Acciones</th>
               </tr>
             </thead>
-            
+
             <motion.tbody
               variants={containerVariants}
               initial="hidden"
@@ -228,16 +278,21 @@ export const ProductsPageContent = () => {
                       <td className="px-8 py-5 text-center">
                         <motion.button
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => handleToggleFeatured(product.id, product.isFeatured)}
+                          onClick={() =>
+                            handleToggleFeatured(product.id, product.isFeatured)
+                          }
                           disabled={toggleFeaturedMutation.isPending}
                           className={cn(
                             "p-2.5 rounded-full transition-all duration-300 outline-none",
-                            product.isFeatured 
-                              ? "bg-yellow-50 text-yellow-500 shadow-sm" 
-                              : "text-secondary/50 hover:bg-system-gray-6 hover:text-secondary/80"
+                            product.isFeatured
+                              ? "bg-yellow-50 text-yellow-500 shadow-sm"
+                              : "text-secondary/50 hover:bg-system-gray-6 hover:text-secondary/80",
                           )}
                         >
-                          <Star size={18} fill={product.isFeatured ? "currentColor" : "none"} />
+                          <Star
+                            size={18}
+                            fill={product.isFeatured ? "currentColor" : "none"}
+                          />
                         </motion.button>
                       </td>
                       <td className="px-8 py-5 text-right w-32">
@@ -311,4 +366,3 @@ export const ProductsPageContent = () => {
     </div>
   );
 };
-

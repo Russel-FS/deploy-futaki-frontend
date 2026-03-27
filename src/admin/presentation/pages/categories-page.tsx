@@ -10,6 +10,8 @@ import {
   ChevronRight,
   Star,
   Plus,
+  Folder,
+  CircleCheck,
 } from "lucide-react";
 import { AdminModal } from "../components/admin-modal";
 import { CategoryForm } from "../components/category-form";
@@ -17,15 +19,17 @@ import {
   useCategories,
   useToggleCategoryActive,
   useToggleCategoryFeatured,
+  useCategoryMetrics,
 } from "../hooks/use-categories";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button";
 import { CategoryRowSkeleton } from "@/shared/ui/skeleton";
 import { Switch } from "@/shared/ui/switch";
-import { cn } from "@/shared/lib/utils";
 import { useDebounce } from "@/shared/hooks/use-debounce";
 import { MemphisEmptyState } from "@/shared/ui/memphis-empty-state";
+import { MetricCard } from "@/shared/ui/metric-card";
+import { cn } from "@/shared/lib/utils";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -57,6 +61,10 @@ export const CategoriesPageContent = () => {
   useEffect(() => {
     setPage(1);
   }, [debouncedSearch]);
+
+  const { data: metricsData, isLoading: isLoadingMetrics } =
+    useCategoryMetrics();
+  const metrics = metricsData?.data;
 
   const { data, isLoading, error } = useCategories({
     page,
@@ -117,6 +125,33 @@ export const CategoriesPageContent = () => {
           <Plus size={20} className="mr-2" />
           Nueva Categoría
         </Button>
+      </div>
+
+      {/* Metrics Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <MetricCard
+          title="Total Categorías"
+          value={metrics?.total || 0}
+          icon={<Folder size={20} />}
+          isLoading={isLoadingMetrics}
+        />
+        <MetricCard
+          title="Categorías Activas"
+          value={metrics?.active || 0}
+          icon={<CircleCheck size={20} />}
+          isLoading={isLoadingMetrics}
+          trend={
+            metrics?.active && metrics.active > 0
+              ? { value: "Visibles al cliente", isPositive: true }
+              : undefined
+          }
+        />
+        <MetricCard
+          title="Destacados en Home"
+          value={metrics?.featured || 0}
+          icon={<Star size={20} />}
+          isLoading={isLoadingMetrics}
+        />
       </div>
 
       <div className="bg-white rounded-4xl border border-border/10 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-500">
