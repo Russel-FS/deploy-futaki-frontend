@@ -1,11 +1,12 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { PUBLIC_QUERY_KEYS } from "../constants/query-keys";
 
 /**
  * Hook para obtener categorías públicas
  */
 export const usePublicCategories = () => {
   return useQuery({
-    queryKey: ["public-categories"],
+    queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL,
     queryFn: () => fetch("/api/catalog/categories").then((res) => res.json()),
   });
 };
@@ -15,7 +16,7 @@ export const usePublicCategories = () => {
  */
 export const useFeaturedCategories = () => {
   return useQuery({
-    queryKey: ["featured-categories"],
+    queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED,
     queryFn: () =>
       fetch("/api/catalog/categories/featured").then((res) => res.json()),
     placeholderData: keepPreviousData,
@@ -27,7 +28,7 @@ export const useFeaturedCategories = () => {
  */
 export const usePublicProducts = (categoryId?: string) => {
   return useQuery({
-    queryKey: ["public-products", categoryId],
+    queryKey: [...PUBLIC_QUERY_KEYS.PRODUCTS.ALL, categoryId],
     queryFn: () => {
       const url = categoryId
         ? `/api/catalog/products?categoryId=${categoryId}`
@@ -43,7 +44,7 @@ export const usePublicProducts = (categoryId?: string) => {
  */
 export const useFeaturedProducts = () => {
   return useQuery({
-    queryKey: ["featured-products"],
+    queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.FEATURED,
     queryFn: () =>
       fetch("/api/catalog/products/featured").then((res) => res.json()),
     placeholderData: keepPreviousData,
@@ -55,7 +56,7 @@ export const useFeaturedProducts = () => {
  */
 export const usePublicProduct = (id: string) => {
   return useQuery({
-    queryKey: ["public-product", id],
+    queryKey: PUBLIC_QUERY_KEYS.PRODUCTS.DETAIL(id),
     queryFn: () =>
       fetch(`/api/catalog/products/${id}`).then((res) => {
         if (!res.ok) throw new Error("Producto no encontrado");

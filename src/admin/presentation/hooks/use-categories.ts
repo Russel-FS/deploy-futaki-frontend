@@ -5,6 +5,8 @@ import {
   keepPreviousData,
 } from "@tanstack/react-query";
 import { toast } from "@/shared/ui/toast";
+import { ADMIN_QUERY_KEYS } from "../constants/query-keys";
+import { PUBLIC_QUERY_KEYS } from "@/catalog/presentation/constants/query-keys";
 
 export interface Category {
   id: string;
@@ -30,7 +32,7 @@ export interface CategoryMetrics {
 
 export const useCategoryMetrics = () => {
   return useQuery<{ data: CategoryMetrics }>({
-    queryKey: ["category-metrics"],
+    queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS,
     queryFn: () =>
       fetch("/api/admin/catalog/categories/metrics").then((res) => res.json()),
   });
@@ -42,7 +44,7 @@ export const useCategories = (
   const { page = 1, limit = 10, search = "" } = params;
 
   return useQuery<PaginatedCategoryResponse>({
-    queryKey: ["categories", { page, limit, search }],
+    queryKey: [...ADMIN_QUERY_KEYS.CATEGORIES.ALL, { page, limit, search }],
     queryFn: () => {
       const url = new URL(
         "/api/admin/catalog/categories",
@@ -72,8 +74,11 @@ export const useToggleCategoryActive = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL });
+      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS });
+      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS });
+      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL });
+      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED });
       toast.success(
         variables.isActive
           ? "Categoría activada correctamente"
@@ -106,8 +111,10 @@ export const useToggleCategoryFeatured = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-      queryClient.invalidateQueries({ queryKey: ["featured-categories"] });
+      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL });
+      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS });
+      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL });
+      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED });
       toast.success(
         variables.isFeatured
           ? "Categoría destacada correctamente"
@@ -152,8 +159,11 @@ export const useSaveCategory = () => {
       return res.json();
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["categories"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-stats"] });
+      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.ALL });
+      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.CATEGORIES.METRICS });
+      queryClient.invalidateQueries({ queryKey: ADMIN_QUERY_KEYS.DASHBOARD.STATS });
+      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.ALL });
+      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.CATEGORIES.FEATURED });
       toast.success(
         variables.id
           ? "Categoría actualizada correctamente."
