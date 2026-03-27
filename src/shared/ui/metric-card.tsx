@@ -56,12 +56,12 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         {trend && !isLoading && (
           <div
             className={cn(
-              "text-[13px] font-bold px-2 py-0.5 rounded-full mb-1 border",
+              "text-[13px] font-bold px-2 py-0.5 rounded-full mb-1",
               trend.isNeutral
-                ? "bg-system-gray-6 text-secondary/80 border-border/5"
+                ? "bg-system-gray-6 text-secondary/80"
                 : trend.isPositive
-                  ? "bg-green-50 text-green-600 border-green-100"
-                  : "bg-red-50 text-red-600 border-red-100",
+                  ? "text-green-600"
+                  : "text-red-600",
             )}
           >
             {trend.value}

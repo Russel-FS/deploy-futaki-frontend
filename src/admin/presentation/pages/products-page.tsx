@@ -160,7 +160,7 @@ export const ProductsPageContent = () => {
           </p>
         </div>
         <Button
-          className="rounded-full hover:-translate-y-0.5 transition-all duration-300 px-6 py-6"
+          className="rounded-full hover:-translate-y-0.5 transition-all duration-300 px-6 py-5"
           onClick={handleOpenCreate}
           size="lg"
         >
