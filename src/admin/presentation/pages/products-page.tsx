@@ -11,6 +11,7 @@ import {
   Plus,
   AlertCircle,
   CircleCheck,
+  FileText,
 } from "lucide-react";
 import Image from "next/image";
 import { AdminModal } from "../components/admin-modal";
@@ -297,6 +298,17 @@ export const ProductsPageContent = () => {
                       </td>
                       <td className="px-8 py-5 text-right w-32">
                         <div className="flex items-center justify-end gap-2">
+                          {product.pdfUrl && (
+                            <a
+                              href={product.pdfUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title="Ver Ficha Técnica PDF"
+                              className="p-2.5 rounded-full text-red-400 hover:text-red-600 hover:bg-red-50 transition-all duration-300"
+                            >
+                              <FileText size={16} />
+                            </a>
+                          )}
                           <Switch
                             checked={product.isActive}
                             onChange={() =>
