@@ -5,10 +5,10 @@ const slideRepository = new PrismaSlideRepository();
 
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     const body = await request.json();
     const slide = await slideRepository.updateSlide(id, body);
     return NextResponse.json({ data: slide });
@@ -23,10 +23,10 @@ export async function PUT(
 
 export async function DELETE(
   _request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const { id } = params;
+    const { id } = await params;
     await slideRepository.deleteSlide(id);
     return NextResponse.json({ message: "Banner eliminado correctamente." });
   } catch (error) {
