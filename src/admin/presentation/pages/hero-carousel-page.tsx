@@ -210,11 +210,12 @@ export const HeroCarouselPage = () => {
                           {canvasData.subtitle || "Escribe una descripción..."}
                         </p>
                         {canvasData.ctaText && (
-                          <div 
+                          <div
                             className="inline-flex px-8 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-2xl transition-all duration-300"
-                            style={{ 
-                              backgroundColor: canvasData.btnBgColor || "#000000",
-                              color: canvasData.btnTextColor || "#FFFFFF"
+                            style={{
+                              backgroundColor:
+                                canvasData.btnBgColor || "#000000",
+                              color: canvasData.btnTextColor || "#FFFFFF",
                             }}
                           >
                             {canvasData.ctaText}
@@ -329,7 +330,7 @@ export const HeroCarouselPage = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => handleDelete(selectedSlide.id)}
-                className="text-red-500 hover:bg-red-500 hover:text-white rounded-xl h-9 font-bold text-[11px]"
+                className="text-red-500 hover:bg-red-500 hover:text-white rounded-full h-9 font-bold text-[11px]"
               >
                 Eliminar Slide
               </Button>
