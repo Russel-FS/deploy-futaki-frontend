@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
-import { Package, Tags, Users, ArrowUpRight } from "lucide-react";
+import { Package, Tags, Users, ArrowUpRight, ImageOff } from "lucide-react";
 import { useAdminStats } from "../hooks/use-admin-stats";
 import { motion, Variants } from "framer-motion";
+import { CategoryChart } from "../components/dashboard/category-chart";
 
 const container: Variants = {
   hidden: { opacity: 0 },
@@ -66,10 +67,7 @@ export const AdminDashboardPageContent = () => {
         </h1>
         <p className="text-secondary text-sm font-medium opacity-60">
           Resumen operativo de{" "}
-          <span className="text-primary font-semibold">
-            Futeki Intelligence
-          </span>
-          .
+          <span className="text-primary font-semibold">Futeki</span>.
         </p>
       </motion.div>
 
@@ -83,7 +81,7 @@ export const AdminDashboardPageContent = () => {
           <motion.div
             key={i}
             variants={item}
-            className="group relative p-7 bg-white  rounded-3xl border border-border/10 hover:border-primary/30 transition-all cursor-default overflow-hidden shadow-sm"
+            className="group relative p-7 bg-white  rounded-3xl border border-border/10 hover:border-primary/30 transition-all cursor-default overflow-hidden "
           >
             <div className="absolute top-0 right-0 p-8 text-secondary/5 group-hover:text-primary/10 transition-colors">
               <stat.icon size={80} strokeWidth={1} />
@@ -93,9 +91,6 @@ export const AdminDashboardPageContent = () => {
               <div className="flex items-center justify-between mb-8">
                 <div className="bg-system-gray-6  p-3.5 rounded-xl border border-border/10">
                   <stat.icon size={22} className={stat.color} strokeWidth={2} />
-                </div>
-                <div className="flex items-center gap-1 text-[10px] font-bold text-primary bg-primary/5 px-2.5 py-1 rounded-full border border-primary/10">
-                  Hoy <ArrowUpRight size={10} />
                 </div>
               </div>
 
@@ -128,19 +123,88 @@ export const AdminDashboardPageContent = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
-        className="bg-white  rounded-3xl border border-border/10 p-12 text-center shadow-sm"
+        className="grid grid-cols-1 lg:grid-cols-3 gap-8"
       >
-        <div className="max-w-md mx-auto space-y-4">
-          <div className="w-14 h-14 bg-system-gray-6  border border-border/10 rounded-2xl mx-auto flex items-center justify-center text-primary shadow-sm">
-            <Package size={28} strokeWidth={1.5} />
+        <div className="lg:col-span-2 bg-white rounded-[2.5rem] border border-border/10 p-10 ">
+          <div className="mb-8">
+            <h3 className="text-xl font-bold text-foreground tracking-tight">
+              Últimos Productos
+            </h3>
+            <p className="text-[13px] text-secondary/60 font-medium mt-1">
+              Los 5 productos más recientemente añadidos al catálogo
+            </p>
           </div>
-          <h4 className="text-xl font-bold tracking-tight">
-            Analytics Avanzados
-          </h4>
-          <p className="text-secondary font-medium text-sm opacity-60">
-            Estamos preparando gráficas de rendimiento y predicción de stock
-            mediante IA para optimizar tu cadena de suministro.
-          </p>
+          {isLoading ? (
+            <div className="space-y-4">
+              {[...Array(5)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-14 bg-accent/20 animate-pulse rounded-2xl"
+                />
+              ))}
+            </div>
+          ) : !stats?.recentProducts?.length ? (
+            <div className="flex flex-col items-center justify-center h-[260px] text-secondary/30">
+              <Package size={40} strokeWidth={1} />
+              <p className="mt-3 text-sm font-medium">No hay productos aún</p>
+            </div>
+          ) : (
+            <ul className="space-y-3">
+              {stats.recentProducts.map((product, i) => (
+                <motion.li
+                  key={product.id}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    delay: i * 0.06,
+                    type: "spring",
+                    stiffness: 300,
+                    damping: 24,
+                  }}
+                  className="flex items-center gap-4 px-5 py-3.5 rounded-2xl hover:bg-system-gray-6 transition-colors group"
+                >
+                  {/* Thumbnail */}
+                  <div className="w-10 h-10 rounded-xl bg-system-gray-6 border border-border/10 overflow-hidden shrink-0 flex items-center justify-center text-secondary/30">
+                    {product.imageUrl ? (
+                      <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <ImageOff size={16} strokeWidth={1.5} />
+                    )}
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[14px] font-bold text-foreground truncate">
+                      {product.name}
+                    </p>
+                    <p className="text-[12px] text-secondary/50 font-medium">
+                      {product.category.name}
+                    </p>
+                  </div>
+
+                  {/* Price */}
+                  <span className="text-[14px] font-bold text-foreground tabular-nums shrink-0">
+                    $
+                    {product.price.toLocaleString("es-MX", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </span>
+                </motion.li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <div className="bg-white rounded-[2.5rem] border border-border/10 p-10 ">
+          {isLoading ? (
+            <div className="h-[320px] w-full bg-accent/20 animate-pulse rounded-2xl" />
+          ) : (
+            <CategoryChart data={stats?.productsByCategory || []} />
+          )}
         </div>
       </motion.div>
     </div>

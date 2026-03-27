@@ -34,7 +34,7 @@ export const ProductGrid: React.FC = () => {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="aspect-4/5 bg-accent animate-pulse rounded-3xl"
+                className="relative aspect-4/5 overflow-hidden rounded-t-3xl bg-system-gray-6 rounded-3xl"
               />
             ))}
           </div>
