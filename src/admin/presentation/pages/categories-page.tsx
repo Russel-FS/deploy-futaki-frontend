@@ -1,6 +1,7 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import {
-  Plus,
   Search,
   Edit2,
   Filter,
@@ -8,6 +9,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Star,
+  Plus,
 } from "lucide-react";
 import { AdminModal } from "../components/admin-modal";
 import { CategoryForm } from "../components/category-form";
@@ -16,13 +18,32 @@ import {
   useToggleCategoryActive,
   useToggleCategoryFeatured,
 } from "../hooks/use-categories";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/shared/ui/button";
 import { CategoryRowSkeleton } from "@/shared/ui/skeleton";
 import { Switch } from "@/shared/ui/switch";
 import { cn } from "@/shared/lib/utils";
 import { useDebounce } from "@/shared/hooks/use-debounce";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.05, delayChildren: 0.1 },
+  },
+};
+
+const rowVariants: Variants = {
+  hidden: { opacity: 0, y: 15, scale: 0.98 },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { type: "spring" as const, stiffness: 400, damping: 30 },
+  },
+  exit: { opacity: 0, scale: 0.98, transition: { duration: 0.2 } },
+};
 
 export const CategoriesPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -69,66 +90,70 @@ export const CategoriesPageContent = () => {
 
   if (error) {
     return (
-      <div className="p-12 text-center bg-red-50 rounded-3xl border border-red-200 text-red-600 font-bold">
-        Error al cargar las categorÃ­as del sistema.
+      <div className="p-12 text-center bg-red-50 rounded-4xl border border-red-200 text-red-600 font-bold shadow-sm">
+        Error al cargar las categorías del sistema.
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-10">
+    <div className="max-w-7xl mx-auto space-y-8">
+      {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground">
             Categorías
           </h1>
-          <p className="text-secondary text-sm font-medium opacity-60 mt-1">
+          <p className="text-secondary/90 text-[15px] font-medium mt-2 max-w-xl leading-relaxed">
             Organiza y segmenta el catálogo para una mejor navegación.
           </p>
         </div>
         <Button
-          variant="secondary"
-          className="rounded-full"
+          className="rounded-full hover:-translate-y-0.5 transition-all duration-300 px-6 py-6"
           onClick={handleOpenCreate}
-          size="md"
+          size="lg"
         >
+          <Plus size={20} className="mr-2" />
           Nueva Categoría
         </Button>
       </div>
 
-      <div className="bg-white rounded-3xl border border-border/10 overflow-hidden shadow-sm">
-        <div className="p-4 border-b border-border/10 bg-white  flex flex-col md:flex-row items-center gap-4">
+      <div className="bg-white rounded-4xl border border-border/10 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-500">
+        <div className="p-5 border-b border-border/10 bg-white flex flex-col md:flex-row items-center gap-4">
           <div className="relative flex-1 group w-full">
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary/30 group-focus-within:text-primary transition-colors"
-              size={15}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-secondary/60 group-focus-within:text-primary transition-colors duration-300"
+              size={18}
             />
             <input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Buscar categoría o descripción..."
-              className="w-full bg-system-gray-6/50   border-none rounded-full py-2.5 pl-11 pr-4 text-[13px] focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all font-medium placeholder:text-secondary/30"
+              className="w-full bg-system-gray-6 border border-transparent rounded-full py-3.5 pl-12 pr-4 text-[14px] focus:outline-none focus:bg-white focus:border-primary/20 focus:ring-4 focus:ring-primary/10 transition-all font-medium placeholder:text-secondary/70 text-foreground"
             />
           </div>
-          <Button variant="secondary" size="sm" className="hidden md:flex">
-            <Filter size={14} />
-            Filtros
-          </Button>
         </div>
 
+        {/* Table */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-border/10 text-[11px] font-semibold text-secondary/50 bg-system-gray-6/30 ">
-                <th className="px-8 py-3.5">Imagen</th>
-                <th className="px-8 py-3.5">Sección</th>
-                <th className="px-8 py-3.5">Descripción</th>
-                <th className="px-8 py-3.5">Destacado</th>
-                <th className="px-8 py-3.5 text-right">Acciones</th>
+              <tr className="border-b border-border/5 text-[13px] font-bold text-secondary/80 bg-white uppercase tracking-wider">
+                <th className="px-8 py-5">Imagen</th>
+                <th className="px-8 py-5">Sección</th>
+                <th className="px-8 py-5">Descripción</th>
+                <th className="px-8 py-5 text-center">Destacado</th>
+                <th className="px-8 py-5 text-right w-32">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-border/10">
+
+            <motion.tbody
+              variants={containerVariants}
+              initial="hidden"
+              animate="show"
+              className="divide-y divide-border/5 bg-white"
+            >
               <AnimatePresence mode="wait">
                 {isLoading ? (
                   <CategoryRowSkeleton rows={5} />
@@ -139,67 +164,75 @@ export const CategoriesPageContent = () => {
                     exit={{ opacity: 0 }}
                   >
                     <td
-                      colSpan={4}
-                      className="px-8 py-20 text-center text-secondary font-black text-[10px] uppercase italic opacity-30 tracking-widest"
+                      colSpan={5}
+                      className="px-8 py-24 text-center text-secondary font-bold text-[14px] opacity-50"
                     >
-                      Sin registros disponibles
+                      No se encontraron categorías
                     </td>
                   </motion.tr>
                 ) : (
-                  categories.map((category, idx) => (
+                  categories.map((category: any) => (
                     <motion.tr
                       key={category.id}
-                      initial={{ opacity: 0, y: 5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: idx * 0.03 }}
+                      variants={rowVariants}
+                      whileHover={{ backgroundColor: "rgba(0,0,0,0.015)" }}
                       className={cn(
-                        "hover:bg-system-gray-6 transition-colors group cursor-default",
-                        !category.isActive && "opacity-50 grayscale-[0.5]",
+                        "group transition-colors",
+                        !category.isActive && "opacity-50 grayscale-[0.3]",
                       )}
                     >
-                      <td className="px-8 py-4">
-                        <div className="h-10 w-14 rounded-xl bg-system-gray-6  border border-border/10 overflow-hidden relative shrink-0 group-hover:scale-105 transition-transform duration-500">
+                      <td className="px-8 py-5">
+                        <div className="h-12 w-16 rounded-2xl bg-system-gray-6 border border-border/10 overflow-hidden relative shrink-0 group-hover:shadow-md transition-all duration-300">
                           {category.imageUrl ? (
                             <Image
                               src={category.imageUrl}
                               alt={category.name}
                               fill
-                              className="object-cover"
+                              className="object-cover group-hover:scale-105 transition-transform duration-500"
                               unoptimized
                             />
                           ) : (
-                            <div className="flex items-center justify-center h-full text-secondary/20">
-                              <ImageIcon size={18} strokeWidth={1.5} />
+                            <div className="flex items-center justify-center h-full text-secondary/50">
+                              <ImageIcon size={20} strokeWidth={1.5} />
                             </div>
                           )}
                         </div>
                       </td>
-                      <td className="px-8 py-4">
-                        <div className="font-semibold text-foreground text-[14px] tracking-tight">
+                      <td className="px-8 py-5">
+                        <div className="font-bold text-foreground text-[15px] tracking-tight group-hover:text-primary transition-colors">
                           {category.name}
                         </div>
                       </td>
-                      <td className="px-8 py-4">
-                        <div className="text-secondary font-medium text-[12px] line-clamp-1 max-w-md opacity-50 italic">
-                          {category.description || "Sin descripciÃ³n"}
+                      <td className="px-8 py-5">
+                        <div className="text-secondary/90 font-medium text-[13px] line-clamp-2 max-w-sm">
+                          {category.description || "Sin descripción"}
                         </div>
                       </td>
-                      <td className="px-8 py-4 text-center">
-                        <button
-                          onClick={() => handleToggleFeatured(category.id, category.isFeatured)}
+                      <td className="px-8 py-5 text-center">
+                        <motion.button
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() =>
+                            handleToggleFeatured(
+                              category.id,
+                              category.isFeatured,
+                            )
+                          }
                           disabled={toggleFeaturedMutation.isPending}
                           className={cn(
-                            "p-2 rounded-full transition-all",
-                            category.isFeatured 
-                              ? "bg-yellow-50 text-yellow-500 shadow-sm" 
-                              : "text-secondary/20 hover:bg-system-gray-6 hover:text-secondary/40"
+                            "p-2.5 rounded-full transition-all duration-300 outline-none",
+                            category.isFeatured
+                              ? "bg-yellow-50 text-yellow-500 shadow-sm"
+                              : "text-secondary/50 hover:bg-system-gray-6 hover:text-secondary/80",
                           )}
                         >
-                          <Star size={16} fill={category.isFeatured ? "currentColor" : "none"} />
-                        </button>
+                          <Star
+                            size={18}
+                            fill={category.isFeatured ? "currentColor" : "none"}
+                          />
+                        </motion.button>
                       </td>
-                      <td className="px-8 py-4 text-right">
-                        <div className="flex items-center justify-end gap-3">
+                      <td className="px-8 py-5 text-right w-32">
+                        <div className="flex items-center justify-end gap-2">
                           <Switch
                             checked={category.isActive}
                             onChange={() =>
@@ -211,9 +244,9 @@ export const CategoriesPageContent = () => {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleOpenEdit(category)}
-                            className="p-2 opacity-0 group-hover:opacity-100 transition-all"
+                            className="p-2.5 rounded-full text-secondary/80 hover:text-primary hover:bg-primary/5 transition-all duration-300 ml-1"
                           >
-                            <Edit2 size={14} />
+                            <Edit2 size={16} />
                           </Button>
                         </div>
                       </td>
@@ -221,39 +254,39 @@ export const CategoriesPageContent = () => {
                   ))
                 )}
               </AnimatePresence>
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
 
         {/* Paginación */}
-        <div className="p-4 border-t border-border/10 bg-system-gray-6/20 flex items-center justify-between">
-          <p className="text-[11px] font-semibold text-secondary/40 ml-4">
-            Mostrando {categories.length} de {total} resultados
-          </p>
-          <div className="flex items-center gap-2 mr-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              disabled={page === 1}
-              onClick={() => setPage((p) => p - 1)}
-              className="p-2 h-9 w-9 rounded-full"
-            >
-              <ChevronLeft size={16} />
-            </Button>
-            <span className="text-[12px] font-bold text-foreground mx-2 w-4 text-center">
-              {page}
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              disabled={page >= totalPages}
-              onClick={() => setPage((p) => p + 1)}
-              className="p-2 h-9 w-9 rounded-full"
-            >
-              <ChevronRight size={16} />
-            </Button>
+        {totalPages > 1 && (
+          <div className="p-5 border-t border-border/5 bg-white flex items-center justify-between">
+            <p className="text-[13px] font-semibold text-secondary/80 ml-4">
+              Página {page} de {totalPages}
+            </p>
+            <div className="flex items-center gap-2 mr-4 bg-system-gray-6 p-1 rounded-full">
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={page === 1}
+                onClick={() => setPage((p) => p - 1)}
+                className="p-2 h-9 w-9 rounded-full bg-white shadow-sm disabled:shadow-none disabled:bg-transparent transition-all"
+              >
+                <ChevronLeft size={16} />
+              </Button>
+              <div className="w-px h-4 bg-border/20 mx-1" />
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={page >= totalPages}
+                onClick={() => setPage((p) => p + 1)}
+                className="p-2 h-9 w-9 rounded-full bg-white shadow-sm disabled:shadow-none disabled:bg-transparent transition-all"
+              >
+                <ChevronRight size={16} />
+              </Button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <AdminModal
