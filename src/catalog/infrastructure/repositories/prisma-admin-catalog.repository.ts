@@ -120,6 +120,7 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
         price: Number(data.price),
         stock: Number(data.stock),
         imageUrl: data.imageUrl,
+        pdfUrl: data.pdfUrl,
         categoryId: data.categoryId,
         specs: data.specs || [],
         isFeatured: data.isFeatured ?? false,
@@ -130,11 +131,14 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
   }
 
   async updateProduct(id: string, data: any): Promise<Product> {
-    const { id: _, category: __, ...rest } = data;
-    const updateData = { ...rest };
+    const { id: _, category: __, categoryId, price, stock, ...rest } = data;
+    const updateData: any = { ...rest };
 
-    if (data.price !== undefined) updateData.price = Number(data.price);
-    if (data.stock !== undefined) updateData.stock = Number(data.stock);
+    if (price !== undefined) updateData.price = Number(price);
+    if (stock !== undefined) updateData.stock = Number(stock);
+    if (categoryId) {
+      updateData.category = { connect: { id: categoryId } };
+    }
 
     return prisma.product.update({
       where: { id },
