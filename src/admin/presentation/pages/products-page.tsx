@@ -12,6 +12,7 @@ import {
   AlertCircle,
   CircleCheck,
   FileText,
+  Loader2,
 } from "lucide-react";
 import Image from "next/image";
 import { AdminModal } from "../components/admin-modal";
@@ -53,14 +54,10 @@ const rowVariants: Variants = {
 export const ProductsPageContent = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
-
+  const [openingPdfId, setOpeningPdfId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 500);
-
-  useEffect(() => {
-    setPage(1);
-  }, [debouncedSearch]);
 
   const { data: metricsData, isLoading: isLoadingMetrics } =
     useProductMetrics();
@@ -79,22 +76,67 @@ export const ProductsPageContent = () => {
   const toggleMutation = useToggleProductActive();
   const toggleFeaturedMutation = useToggleProductFeatured();
 
+  /**
+   * Reinicia la página a 1 cuando cambia la búsqueda.
+   */
+  useEffect(() => {
+    setPage(1);
+  }, [debouncedSearch]);
+
+  /**
+   * Abre el modal para crear un nuevo producto.
+   */
   const handleOpenCreate = () => {
     setEditingProduct(null);
     setIsModalOpen(true);
   };
 
+  /**
+   * Abre el modal para editar un producto existente.
+   * @param product Producto a editar.
+   */
   const handleOpenEdit = (product: any) => {
     setEditingProduct(product);
     setIsModalOpen(true);
   };
 
+  /**
+   * Alterna el estado de activo de un producto.
+   * @param id ID del producto.
+   * @param currentStatus Estado actual del producto.
+   */
   const handleToggleActive = (id: string, currentStatus: boolean) => {
     toggleMutation.mutate({ id, isActive: !currentStatus });
   };
 
+  /**
+   * Alterna el estado de destacado de un producto.
+   * @param id ID del producto.
+   * @param currentStatus Estado actual del producto.
+   */
   const handleToggleFeatured = (id: string, currentStatus: boolean) => {
     toggleFeaturedMutation.mutate({ id, isFeatured: !currentStatus });
+  };
+
+  /**
+   * Abre el PDF del producto en una nueva pestaña.
+   * @param productId ID del producto.
+   * @param fileKey Clave del archivo PDF en el bucket privado.
+   */
+  const handleOpenPdf = async (productId: string, fileKey: string) => {
+    setOpeningPdfId(productId);
+    try {
+      const res = await fetch(
+        `/api/admin/catalog/products/document-url?key=${encodeURIComponent(fileKey)}`,
+      );
+      const data = await res.json();
+      if (data.url) {
+        window.open(data.url, "_blank");
+      }
+    } catch {
+    } finally {
+      setOpeningPdfId(null);
+    }
   };
 
   if (error) {
@@ -299,15 +341,21 @@ export const ProductsPageContent = () => {
                       <td className="px-8 py-5 text-right w-32">
                         <div className="flex items-center justify-end gap-2">
                           {product.pdfUrl && (
-                            <a
-                              href={product.pdfUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleOpenPdf(product.id, product.pdfUrl)
+                              }
+                              disabled={openingPdfId === product.id}
                               title="Ver Ficha Técnica PDF"
-                              className="p-2.5 rounded-full text-red-400 hover:text-red-600 hover:bg-red-50 transition-all duration-300"
+                              className="p-2.5 rounded-full text-red-400 hover:text-red-600 hover:bg-red-50 transition-all duration-300 disabled:opacity-50 disabled:cursor-wait"
                             >
-                              <FileText size={16} />
-                            </a>
+                              {openingPdfId === product.id ? (
+                                <Loader2 size={16} className="animate-spin" />
+                              ) : (
+                                <FileText size={16} />
+                              )}
+                            </button>
                           )}
                           <Switch
                             checked={product.isActive}
