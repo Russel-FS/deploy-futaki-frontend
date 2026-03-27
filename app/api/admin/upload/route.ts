@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { B2StorageService } from "@/shared/services/b2-storage.service";
+import { B2MediaStorageService } from "@/shared/services/b2-media-storage.service";
 import { validateImageFile } from "@/catalog/application/validation/catalog.validation";
 import sharp from "sharp";
 
-const storageService = new B2StorageService();
+const storageService = new B2MediaStorageService();
 
 export async function POST(request: Request) {
   try {

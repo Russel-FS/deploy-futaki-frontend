@@ -138,10 +138,10 @@ export const validateCreateProduct = (
     }
   }
 
-  // pdf url (opcional)
+  // pdf key
   if (data.pdfUrl !== undefined && data.pdfUrl !== null && data.pdfUrl !== "") {
-    if (!isValidUrl(data.pdfUrl)) {
-      errors.push("La URL del PDF no es válida.");
+    if (typeof data.pdfUrl !== "string" || !data.pdfUrl.trim()) {
+      errors.push("La clave del documento PDF no es válida.");
     }
   }
 
@@ -219,9 +219,10 @@ export const validateUpdateProduct = (
     }
   }
 
+  // pdf key (opcional) — se almacena como clave del bucket privado, no como URL
   if (data.pdfUrl !== undefined && data.pdfUrl !== null && data.pdfUrl !== "") {
-    if (!isValidUrl(data.pdfUrl)) {
-      errors.push("La URL del PDF no es válida.");
+    if (typeof data.pdfUrl !== "string" || !data.pdfUrl.trim()) {
+      errors.push("La clave del documento PDF no es válida.");
     }
   }
 

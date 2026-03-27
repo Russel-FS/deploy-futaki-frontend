@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { B2StorageService } from "@/shared/services/b2-storage.service";
+import { B2DocumentStorageService } from "@/shared/services/b2-document-storage.service";
 import { validatePdfFile } from "@/catalog/application/validation/catalog.validation";
 
-const storageService = new B2StorageService();
+const storageService = new B2DocumentStorageService();
 
 export async function POST(request: Request) {
   try {
