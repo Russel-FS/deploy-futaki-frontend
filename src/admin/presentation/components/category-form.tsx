@@ -19,7 +19,9 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
   const [description, setDescription] = useState(
     initialData?.description || "",
   );
-  const [isFeatured, setIsFeatured] = useState(initialData?.isFeatured || false);
+  const [isFeatured, setIsFeatured] = useState(
+    initialData?.isFeatured || false,
+  );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     initialData?.imageUrl || null,
@@ -43,7 +45,7 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     let imageUrl = previewUrl;
 
     if (selectedFile) {
@@ -62,15 +64,18 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
       }
     }
 
-    mutation.mutate({ 
-      id: initialData?.id, 
-      name, 
-      description, 
-      imageUrl,
-      isFeatured, 
-    }, {
-      onSuccess: () => onSuccess()
-    });
+    mutation.mutate(
+      {
+        id: initialData?.id,
+        name,
+        description,
+        imageUrl,
+        isFeatured,
+      },
+      {
+        onSuccess: () => onSuccess(),
+      },
+    );
   };
 
   const isSubmitting = mutation.isPending;
@@ -129,7 +134,7 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
                   <p className="text-[11px] font-semibold text-foreground">
                     Subir Imagen
                   </p>
-                  <p className="text-[10px] font-medium text-secondary/40 mt-0.5">
+                  <p className="text-[10px] font-medium text-secondary/70 mt-0.5">
                     Recomendado: 1200x800px
                   </p>
                 </div>
@@ -146,13 +151,14 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
 
         <div className="flex items-center justify-between p-4 bg-system-gray-6/30 rounded-2xl border border-border/5">
           <div>
-            <p className="text-[12px] font-semibold text-foreground">Principal / Destacado</p>
-            <p className="text-[10px] text-secondary/40 font-medium">Mostrar en la pantalla de inicio principal.</p>
+            <p className="text-[12px] font-semibold text-foreground">
+              Principal / Destacado
+            </p>
+            <p className="text-[10px] text-secondary/70 font-medium">
+              Mostrar en la pantalla de inicio principal.
+            </p>
           </div>
-          <Switch 
-            checked={isFeatured} 
-            onChange={setIsFeatured} 
-          />
+          <Switch checked={isFeatured} onChange={setIsFeatured} />
         </div>
       </div>
 

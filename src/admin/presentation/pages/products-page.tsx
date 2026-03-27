@@ -20,6 +20,7 @@ import { ProductRowSkeleton } from "@/shared/ui/skeleton";
 import { cn } from "@/shared/lib/utils";
 import { useDebounce } from "@/shared/hooks/use-debounce";
 import { Switch } from "@/shared/ui/switch";
+import { MemphisEmptyState } from "@/shared/ui/memphis-empty-state";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -130,7 +131,7 @@ export const ProductsPageContent = () => {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto min-h-[500px]">
           <table className="w-full text-left border-collapse">
             <thead>
               <tr className="border-b border-border/5 text-[13px] font-bold text-secondary/80 bg-white uppercase tracking-wider">
@@ -158,11 +159,8 @@ export const ProductsPageContent = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   >
-                    <td
-                      colSpan={6}
-                      className="px-8 py-24 text-center text-secondary font-bold text-[14px] opacity-50"
-                    >
-                      No se encontraron activos
+                    <td colSpan={6} className="px-8 py-10">
+                      <MemphisEmptyState message="No hay productos para mostrar" />
                     </td>
                   </motion.tr>
                 ) : (

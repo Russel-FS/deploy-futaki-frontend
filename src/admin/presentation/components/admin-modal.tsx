@@ -43,7 +43,7 @@ export const AdminModal = ({
               </h2>
               <button
                 onClick={onClose}
-                className="p-2 text-secondary/40 hover:text-foreground hover:bg-white  rounded-full transition-all active:scale-90"
+                className="p-2 text-secondary/70 hover:text-foreground hover:bg-white  rounded-full transition-all active:scale-90"
               >
                 <X size={20} strokeWidth={2.5} />
               </button>

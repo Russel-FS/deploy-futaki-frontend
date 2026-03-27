@@ -9,7 +9,7 @@ import Link from "next/link";
 
 export const FeaturedCategories: React.FC = () => {
   const { data, isLoading } = useFeaturedCategories();
-  
+
   const categories = Array.isArray(data) ? data : [];
 
   if (!isLoading && categories.length === 0) return null;
@@ -20,7 +20,7 @@ export const FeaturedCategories: React.FC = () => {
         <div className="flex items-end justify-between mb-12">
           <div className="max-w-xl">
             <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground mb-4 uppercase">
-              Explora por CategorÃ­as
+              Explora por Categorías
             </h2>
             <p className="text-secondary font-medium text-lg">
               Seleccionamos lo mejor de cada segmento para potenciar tu estilo

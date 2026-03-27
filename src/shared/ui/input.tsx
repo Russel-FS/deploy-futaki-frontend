@@ -13,7 +13,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full space-y-1.5 text-left">
         {label && (
-          <label className="text-[10px] font-black uppercase tracking-widest text-secondary/40 ml-1">
+          <label className="text-[10px] font-black uppercase tracking-widest text-secondary/70 ml-1">
             {label}
           </label>
         )}
@@ -22,7 +22,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           className={cn(
             "flex w-full bg-system-gray-6 border border-transparent rounded-2xl p-3.5 text-sm font-bold placeholder:text-secondary/30 focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all",
             error && "border-red-500/50 bg-red-500/5",
-            className
+            className,
           )}
           ref={ref}
           {...props}
@@ -34,7 +34,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";
@@ -49,7 +49,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     return (
       <div className="w-full space-y-1.5 text-left">
         {label && (
-          <label className="text-[10px] font-black uppercase tracking-widest text-secondary/40 ml-1">
+          <label className="text-[10px] font-black uppercase tracking-widest text-secondary/70 ml-1">
             {label}
           </label>
         )}
@@ -57,7 +57,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           className={cn(
             "flex w-full bg-system-gray-6 border border-transparent rounded-2xl p-3.5 text-sm font-bold placeholder:text-secondary/30 focus:outline-none focus:ring-1 focus:ring-primary/20 transition-all min-h-[80px] resize-none",
             error && "border-red-500/50 bg-red-500/5",
-            className
+            className,
           )}
           ref={ref}
           {...props}
@@ -69,7 +69,7 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 TextArea.displayName = "TextArea";

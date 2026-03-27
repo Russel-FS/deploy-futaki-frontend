@@ -222,7 +222,7 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
       <div className="flex items-center justify-between p-4 bg-system-gray-6/50 rounded-2xl border border-border/5">
         <div>
           <p className="text-[12px] font-semibold text-foreground">Destacar en Inicio</p>
-          <p className="text-[10px] text-secondary/40 font-medium">Priorizar este producto en el catálogo destacado de la Home.</p>
+          <p className="text-[10px] text-secondary/70 font-medium">Priorizar este producto en el catálogo destacado de la Home.</p>
         </div>
         <Switch 
           checked={formData.isFeatured} 

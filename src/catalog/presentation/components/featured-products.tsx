@@ -22,7 +22,7 @@ export const FeaturedProducts: React.FC = () => {
           </span>
           <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-foreground mb-6 uppercase leading-none">
             Los Imprescindibles <br />
-            <span className="text-secondary/40">de esta semana.</span>
+            <span className="text-secondary/70">de esta semana.</span>
           </h2>
           <p className="text-xl text-secondary font-medium">
             Equipos que definen el futuro. DiseÃ±o, rendimiento y exclusividad

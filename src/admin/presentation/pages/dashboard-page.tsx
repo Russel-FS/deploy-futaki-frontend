@@ -100,7 +100,7 @@ export const AdminDashboardPageContent = () => {
               </div>
 
               <div>
-                <p className="text-secondary/40 text-[11px] font-semibold tracking-tight mb-1">
+                <p className="text-secondary/70 text-[11px] font-semibold tracking-tight mb-1">
                   {stat.label}
                 </p>
                 <div className="flex items-baseline gap-2">
@@ -115,7 +115,7 @@ export const AdminDashboardPageContent = () => {
                     unidades
                   </span>
                 </div>
-                <p className="text-[11px] text-secondary/40 font-medium mt-4 border-t border-border/5 pt-4">
+                <p className="text-[11px] text-secondary/70 font-medium mt-4 border-t border-border/5 pt-4">
                   {stat.description}
                 </p>
               </div>
