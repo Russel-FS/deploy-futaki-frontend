@@ -14,7 +14,8 @@ interface HeroSlide {
   imageUrl: string;
   ctaText: string | null;
   ctaUrl: string | null;
-  color: string | null;
+  btnBgColor: string | null;
+  btnTextColor: string | null;
   order: number;
 }
 
@@ -90,11 +91,11 @@ export const HeroCarousel: React.FC = () => {
               transition={{ delay: 0.2, duration: 0.8 }}
               className="max-w-2xl px-6 md:px-0"
             >
-              <h1 className="text-4xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter leading-[0.9]">
+              <h1 className="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter leading-[0.9] line-clamp-2">
                 {currentSlide.title}
               </h1>
               {currentSlide.subtitle && (
-                <p className="text-lg md:text-xl text-zinc-300 mb-10 font-medium max-w-lg">
+                <p className="text-lg md:text-xl text-zinc-300 mb-10 font-medium max-w-lg line-clamp-3">
                   {currentSlide.subtitle}
                 </p>
               )}
@@ -102,10 +103,11 @@ export const HeroCarousel: React.FC = () => {
               {currentSlide.ctaText && (
                 <Link
                   href={currentSlide.ctaUrl || "#"}
-                  className={cn(
-                    "inline-block text-white px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl",
-                    currentSlide.color || "bg-primary",
-                  )}
+                  className="inline-block px-10 py-5 rounded-full text-sm font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl"
+                  style={{
+                    backgroundColor: currentSlide.btnBgColor || "#000000",
+                    color: currentSlide.btnTextColor || "#FFFFFF",
+                  }}
                 >
                   {currentSlide.ctaText}
                 </Link>

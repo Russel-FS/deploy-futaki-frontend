@@ -7,7 +7,8 @@ export interface HeroSlide {
   imageUrl: string;
   ctaText: string | null;
   ctaUrl: string | null;
-  color: string | null;
+  btnBgColor: string | null;
+  btnTextColor: string | null;
   order: number;
   isActive: boolean;
   createdAt: Date;
@@ -36,7 +37,8 @@ export class PrismaSlideRepository {
         imageUrl: data.imageUrl,
         ctaText: data.ctaText,
         ctaUrl: data.ctaUrl,
-        color: data.color || "bg-black",
+        btnBgColor: data.btnBgColor || "#000000",
+        btnTextColor: data.btnTextColor || "#FFFFFF",
         order: data.order ?? 0,
         isActive: data.isActive ?? true,
       },
@@ -52,7 +54,8 @@ export class PrismaSlideRepository {
         imageUrl: data.imageUrl,
         ctaText: data.ctaText,
         ctaUrl: data.ctaUrl,
-        color: data.color,
+        btnBgColor: data.btnBgColor,
+        btnTextColor: data.btnTextColor,
         order: data.order,
         isActive: data.isActive,
       },

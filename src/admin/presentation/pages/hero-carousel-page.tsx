@@ -203,18 +203,19 @@ export const HeroCarouselPage = () => {
                             Nuevo Banner en Borrador
                           </span>
                         )}
-                        <h3 className="text-3xl md:text-5xl font-black text-white mb-3 leading-[0.9] uppercase tracking-tighter">
+                        <h3 className="text-3xl md:text-5xl font-black text-white mb-3 leading-[0.9] uppercase tracking-tighter line-clamp-2">
                           {canvasData.title || "Sin título"}
                         </h3>
-                        <p className="text-white/60 text-sm md:text-base font-medium mb-8 line-clamp-2 max-w-sm">
+                        <p className="text-white/60 text-sm md:text-base font-medium mb-8 line-clamp-3 max-w-sm">
                           {canvasData.subtitle || "Escribe una descripción..."}
                         </p>
                         {canvasData.ctaText && (
-                          <div
-                            className={cn(
-                              "inline-flex px-8 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest text-white shadow-2xl transition-all duration-300",
-                              canvasData.color || "bg-primary",
-                            )}
+                          <div 
+                            className="inline-flex px-8 py-3.5 rounded-xl text-[11px] font-black uppercase tracking-widest shadow-2xl transition-all duration-300"
+                            style={{ 
+                              backgroundColor: canvasData.btnBgColor || "#000000",
+                              color: canvasData.btnTextColor || "#FFFFFF"
+                            }}
                           >
                             {canvasData.ctaText}
                           </div>

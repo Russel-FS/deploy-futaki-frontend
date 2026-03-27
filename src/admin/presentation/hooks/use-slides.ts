@@ -9,7 +9,8 @@ export interface HeroSlide {
   imageUrl: string;
   ctaText: string | null;
   ctaUrl: string | null;
-  color: string | null;
+  btnBgColor: string | null;
+  btnTextColor: string | null;
   order: number;
   isActive: boolean;
   updatedAt: string;
