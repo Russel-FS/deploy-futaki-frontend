@@ -188,7 +188,6 @@ export const AdminDashboardPageContent = () => {
 
                   {/* Price */}
                   <span className="text-[14px] font-bold text-foreground tabular-nums shrink-0">
-                    $
                     {product.price.toLocaleString("es-MX", {
                       minimumFractionDigits: 2,
                     })}
