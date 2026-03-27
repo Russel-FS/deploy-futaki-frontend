@@ -2,69 +2,84 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Container } from "@/shared/ui/container";
+import Link from "next/link";
+import { cn } from "@/shared/lib/utils";
 
-const SLIDES = [
-  {
-    id: 1,
-    title: "Innovación en tus manos",
-    subtitle: "Descubre la nueva generación de MacBook Pro con chip M3 Max.",
-    image:
-      "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=1600&auto=format&fit=crop",
-    cta: "Explorar MacBook",
-    color: "bg-blue-600",
-  },
-  {
-    id: 2,
-    title: "El futuro es Titanium",
-    subtitle:
-      "iPhone 15 Pro. El primer iPhone con diseño de titanio aeroespacial.",
-    image:
-      "https://images.unsplash.com/photo-1696446701796-da61225697cc?q=80&w=1600&auto=format&fit=crop",
-    cta: "Ver iPhone",
-    color: "bg-zinc-800",
-  },
-  {
-    id: 3,
-    title: "Gaming sin límites",
-    subtitle: "Las mejores laptops gamer del mundo están aquí.",
-    image:
-      "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?q=80&w=1600&auto=format&fit=crop",
-    cta: "Ver Gaming",
-    color: "bg-purple-600",
-  },
-];
+interface HeroSlide {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  imageUrl: string;
+  ctaText: string | null;
+  ctaUrl: string | null;
+  color: string | null;
+  order: number;
+}
 
 export const HeroCarousel: React.FC = () => {
+  const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [current, setCurrent] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % SLIDES.length);
-    }, 6000);
-    return () => clearInterval(timer);
+    const fetchSlides = async () => {
+      try {
+        const res = await fetch("/api/catalog/slides");
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setSlides(data.data || []);
+      } catch (error) {
+        console.error("Error al obtener slides:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSlides();
   }, []);
 
-  const next = () => setCurrent((prev) => (prev + 1) % SLIDES.length);
+  useEffect(() => {
+    if (slides.length <= 1) return;
+
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slides.length);
+    }, 8000);
+    return () => clearInterval(timer);
+  }, [slides]);
+
+  const next = () => setCurrent((prev) => (prev + 1) % slides.length);
   const prev = () =>
-    setCurrent((prev) => (prev - 1 + SLIDES.length) % SLIDES.length);
+    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+
+  if (isLoading) {
+    return (
+      <div className="h-[500px] md:h-[85vh] w-full bg-black flex items-center justify-center">
+        <Loader2 className="w-10 h-10 animate-spin text-white/20" />
+      </div>
+    );
+  }
+
+  if (slides.length === 0) return null;
+
+  const currentSlide = slides[current];
 
   return (
     <div className="relative h-[500px] md:h-[85vh] w-full overflow-hidden bg-black">
       <AnimatePresence mode="wait">
         <motion.div
-          key={current}
+          key={currentSlide.id}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.8 }}
+          transition={{ duration: 1 }}
           className="absolute inset-0"
         >
           <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent z-10" />
           <img
-            src={SLIDES[current].image}
-            alt={SLIDES[current].title}
+            src={currentSlide.imageUrl}
+            alt={currentSlide.title}
             className="w-full h-full object-cover scale-105"
           />
 
@@ -72,52 +87,66 @@ export const HeroCarousel: React.FC = () => {
             <motion.div
               initial={{ x: -100, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.6 }}
-              className="max-w-2xl"
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="max-w-2xl px-6 md:px-0"
             >
               <h1 className="text-4xl md:text-7xl font-black text-white mb-6 uppercase tracking-tighter leading-[0.9]">
-                {SLIDES[current].title}
+                {currentSlide.title}
               </h1>
-              <p className="text-lg md:text-xl text-zinc-300 mb-10 font-medium">
-                {SLIDES[current].subtitle}
-              </p>
-              <button
-                className={`${SLIDES[current].color} text-white px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl`}
-              >
-                {SLIDES[current].cta}
-              </button>
+              {currentSlide.subtitle && (
+                <p className="text-lg md:text-xl text-zinc-300 mb-10 font-medium max-w-lg">
+                  {currentSlide.subtitle}
+                </p>
+              )}
+
+              {currentSlide.ctaText && (
+                <Link
+                  href={currentSlide.ctaUrl || "#"}
+                  className={cn(
+                    "inline-block text-white px-10 py-5 rounded-2xl text-sm font-black uppercase tracking-widest hover:brightness-110 transition-all shadow-2xl",
+                    currentSlide.color || "bg-primary",
+                  )}
+                >
+                  {currentSlide.ctaText}
+                </Link>
+              )}
             </motion.div>
           </Container>
         </motion.div>
       </AnimatePresence>
 
-      {/* Controls */}
-      <div className="absolute bottom-10 right-10 z-30 flex gap-4">
-        <button
-          onClick={prev}
-          className="p-4 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
-        >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button
-          onClick={next}
-          className="p-4 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all"
-        >
-          <ChevronRight className="w-6 h-6" />
-        </button>
-      </div>
+      {/* Controles */}
+      {slides.length > 1 && (
+        <>
+          <div className="absolute bottom-10 right-10 z-30 flex gap-4">
+            <button
+              onClick={prev}
+              className="p-4 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all backdrop-blur-md"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button
+              onClick={next}
+              className="p-4 rounded-full border border-white/20 text-white hover:bg-white hover:text-black transition-all backdrop-blur-md"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          </div>
 
-      {/* Indicators */}
-      <div className="absolute bottom-10 left-10 z-30 flex gap-2">
-        {SLIDES.map((_, i) => (
-          <div
-            key={i}
-            className={`h-1.5 rounded-full transition-all duration-500 ${
-              i === current ? "w-10 bg-white" : "w-2 bg-white/30"
-            }`}
-          />
-        ))}
-      </div>
+          {/* indicadores */}
+          <div className="absolute bottom-10 left-10 z-30 flex gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrent(i)}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === current ? "w-10 bg-white" : "w-2 bg-white/30"
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -3,13 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Package, Tags, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, Tags, LogOut, Image } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import FutakiLogo from "@/shared/ui/futaki-logo";
 import { motion } from "framer-motion";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+  { icon: Image, label: "Banner Principal", href: "/admin/hero" },
   { icon: Package, label: "Productos", href: "/admin/products" },
   { icon: Tags, label: "Categorías", href: "/admin/categories" },
 ];
