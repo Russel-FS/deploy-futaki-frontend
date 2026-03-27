@@ -8,4 +8,7 @@ export const PUBLIC_QUERY_KEYS = {
     FEATURED: ["public", "products", "featured"] as const,
     DETAIL: (id: string) => ["public", "products", "detail", id] as const,
   },
+  SLIDES: {
+    ALL: ["public", "slides"] as const,
+  },
 };

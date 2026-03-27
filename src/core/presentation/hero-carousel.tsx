@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import { Container } from "@/shared/ui/container";
 import Link from "next/link";
 import { cn } from "@/shared/lib/utils";
+import { usePublicSlides } from "@/catalog/presentation/hooks/use-public-catalog";
 
 interface HeroSlide {
   id: string;
@@ -20,26 +21,8 @@ interface HeroSlide {
 }
 
 export const HeroCarousel: React.FC = () => {
-  const [slides, setSlides] = useState<HeroSlide[]>([]);
+  const { data: slides = [], isLoading } = usePublicSlides();
   const [current, setCurrent] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSlides = async () => {
-      try {
-        const res = await fetch("/api/catalog/slides");
-        if (!res.ok) throw new Error();
-        const data = await res.json();
-        setSlides(data.data || []);
-      } catch (error) {
-        console.error("Error al obtener slides:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSlides();
-  }, []);
 
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -137,7 +120,7 @@ export const HeroCarousel: React.FC = () => {
 
           {/* indicadores */}
           <div className="absolute bottom-10 left-10 z-30 flex gap-2">
-            {slides.map((_, i) => (
+            {slides.map((_: any, i: number) => (
               <button
                 key={i}
                 onClick={() => setCurrent(i)}

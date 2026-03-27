@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { extractErrorMessage } from "@/shared/utils/error-handler";
+import { PUBLIC_QUERY_KEYS } from "@/catalog/presentation/constants/query-keys";
 
 export interface HeroSlide {
   id: string;
@@ -52,6 +53,7 @@ export const useSaveSlide = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "slides"] });
+      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.SLIDES.ALL });
       toast.success("Banner guardado correctamente");
     },
     onError: (error: Error) => {
@@ -77,6 +79,7 @@ export const useDeleteSlide = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "slides"] });
+      queryClient.invalidateQueries({ queryKey: PUBLIC_QUERY_KEYS.SLIDES.ALL });
       toast.success("Banner eliminado correctamente");
     },
     onError: (error: Error) => {

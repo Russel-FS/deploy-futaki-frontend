@@ -65,3 +65,17 @@ export const usePublicProduct = (id: string) => {
     enabled: !!id,
   });
 };
+
+/**
+ * Hook para obtener slides del carrusel
+ */
+export const usePublicSlides = () => {
+  return useQuery({
+    queryKey: PUBLIC_QUERY_KEYS.SLIDES.ALL,
+    queryFn: () =>
+      fetch("/api/catalog/slides").then((res) => {
+        if (!res.ok) throw new Error("No se pudieron cargar los banners");
+        return res.json().then((d) => d.data);
+      }),
+  });
+};
