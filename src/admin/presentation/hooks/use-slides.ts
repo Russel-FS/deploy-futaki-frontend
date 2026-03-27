@@ -46,7 +46,9 @@ export const useSaveSlide = () => {
       });
 
       if (!res.ok) {
-        throw new Error(await extractErrorMessage(res, "Error al guardar el banner"));
+        throw new Error(
+          await extractErrorMessage(res, "Error al guardar el banner"),
+        );
       }
 
       return res.json();
@@ -72,7 +74,9 @@ export const useDeleteSlide = () => {
       });
 
       if (!res.ok) {
-        throw new Error(await extractErrorMessage(res, "Error al eliminar el banner"));
+        throw new Error(
+          await extractErrorMessage(res, "Error al eliminar el banner"),
+        );
       }
 
       return res.json();
