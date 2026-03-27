@@ -15,6 +15,20 @@ export class GetPublicProductsUseCase {
   }
 }
 
+export class GetFeaturedCategoriesUseCase {
+  constructor(private catalogRepository: IPublicCatalogRepository) {}
+  async execute(): Promise<Category[]> {
+    return this.catalogRepository.getFeaturedCategories();
+  }
+}
+
+export class GetFeaturedProductsUseCase {
+  constructor(private catalogRepository: IPublicCatalogRepository) {}
+  async execute(): Promise<Product[]> {
+    return this.catalogRepository.getFeaturedProducts();
+  }
+}
+
 export class GetPublicProductsByCategoryUseCase {
   constructor(private catalogRepository: IPublicCatalogRepository) {}
   async execute(categoryId: string): Promise<Product[]> {

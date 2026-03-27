@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Input, TextArea } from "@/shared/ui/input";
+import { Switch } from "@/shared/ui/switch";
 import { Button } from "@/shared/ui/button";
 import { toast } from "@/shared/ui/toast";
 import { useSaveCategory } from "../hooks/use-categories";
@@ -18,6 +19,7 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
   const [description, setDescription] = useState(
     initialData?.description || "",
   );
+  const [isFeatured, setIsFeatured] = useState(initialData?.isFeatured || false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     initialData?.imageUrl || null,
@@ -64,7 +66,8 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
       id: initialData?.id, 
       name, 
       description, 
-      imageUrl 
+      imageUrl,
+      isFeatured, 
     }, {
       onSuccess: () => onSuccess()
     });
@@ -139,6 +142,17 @@ export const CategoryForm = ({ onSuccess, initialData }: CategoryFormProps) => {
               </label>
             )}
           </div>
+        </div>
+
+        <div className="flex items-center justify-between p-4 bg-system-gray-6/30 rounded-2xl border border-border/5">
+          <div>
+            <p className="text-[12px] font-semibold text-foreground">Principal / Destacado</p>
+            <p className="text-[10px] text-secondary/40 font-medium">Mostrar en la pantalla de inicio principal.</p>
+          </div>
+          <Switch 
+            checked={isFeatured} 
+            onChange={setIsFeatured} 
+          />
         </div>
       </div>
 

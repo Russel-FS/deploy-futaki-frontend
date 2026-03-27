@@ -40,15 +40,17 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
         name: data.name!,
         description: data.description || "",
         imageUrl: data.imageUrl || "",
+        isFeatured: data.isFeatured ?? false,
         isActive: data.isActive ?? true,
       },
     });
   }
 
   async updateCategory(id: string, data: Partial<Category>): Promise<Category> {
+    const { id: _, ...updateData } = data;
     return prisma.category.update({
       where: { id },
-      data: { ...data },
+      data: updateData as any,
     });
   }
 
@@ -67,7 +69,12 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
     const skip = (page - 1) * limit;
 
     const where = search
-      ? { name: { contains: search, mode: "insensitive" as any } }
+      ? { 
+          OR: [
+            { name: { contains: search, mode: "insensitive" as any } },
+            { description: { contains: search, mode: "insensitive" as any } }
+          ]
+        }
       : {};
 
     const [total, data] = await Promise.all([
@@ -97,9 +104,11 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
         name: data.name,
         description: data.description,
         price: Number(data.price),
+        stock: Number(data.stock),
         imageUrl: data.imageUrl,
         categoryId: data.categoryId,
         specs: data.specs || [],
+        isFeatured: data.isFeatured ?? false,
         isActive: data.isActive ?? true,
       },
       include: { category: true },
@@ -107,8 +116,11 @@ export class PrismaAdminCatalogRepository implements IAdminCatalogRepository {
   }
 
   async updateProduct(id: string, data: any): Promise<Product> {
-    const updateData = { ...data };
+    const { id: _, category: __, ...rest } = data;
+    const updateData = { ...rest };
+    
     if (data.price !== undefined) updateData.price = Number(data.price);
+    if (data.stock !== undefined) updateData.stock = Number(data.stock);
     
     return prisma.product.update({
       where: { id },

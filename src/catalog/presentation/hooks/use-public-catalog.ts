@@ -1,12 +1,24 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 
 /**
- * Hook para obtener categorias
+ * Hook para obtener categorías públicas
  */
 export const usePublicCategories = () => {
   return useQuery({
     queryKey: ["public-categories"],
     queryFn: () => fetch("/api/catalog/categories").then((res) => res.json()),
+  });
+};
+
+/**
+ * Hook para obtener categorÃ­as destacadas
+ */
+export const useFeaturedCategories = () => {
+  return useQuery({
+    queryKey: ["featured-categories"],
+    queryFn: () =>
+      fetch("/api/catalog/categories/featured").then((res) => res.json()),
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -27,7 +39,19 @@ export const usePublicProducts = (categoryId?: string) => {
 };
 
 /**
- * Hook para obtener un producto individual por
+ * Hook para obtener productos destacados
+ */
+export const useFeaturedProducts = () => {
+  return useQuery({
+    queryKey: ["featured-products"],
+    queryFn: () =>
+      fetch("/api/catalog/products/featured").then((res) => res.json()),
+    placeholderData: keepPreviousData,
+  });
+};
+
+/**
+ * Hook para obtener un producto individual por ID
  */
 export const usePublicProduct = (id: string) => {
   return useQuery({

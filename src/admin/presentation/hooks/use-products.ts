@@ -7,6 +7,7 @@ export interface Product {
   price: number;
   stock: number;
   imageUrl?: string;
+  isFeatured: boolean;
   isActive: boolean;
   category: {
     name: string;
@@ -65,6 +66,34 @@ export const useToggleProductActive = () => {
   });
 };
 
+export const useToggleProductFeatured = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, isFeatured }: { id: string; isFeatured: boolean }) => {
+      const res = await fetch(`/api/admin/catalog/products/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isFeatured }),
+      });
+      if (!res.ok) throw new Error();
+      return res.json();
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["products"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-products"] });
+      toast.success(
+        variables.isFeatured
+          ? "Producto destacado correctamente"
+          : "Producto quitado de destacados",
+      );
+    },
+    onError: () => {
+      toast.error("No se pudo actualizar el estado destacado");
+    },
+  });
+};
+
 export const useSaveProduct = () => {
   const queryClient = useQueryClient();
 
@@ -77,6 +106,7 @@ export const useSaveProduct = () => {
       stock: number;
       categoryId: string;
       imageUrl?: string | null;
+      isFeatured?: boolean;
       specs?: any[];
     }) => {
       const { id, ...rest } = data;
@@ -104,7 +134,7 @@ export const useSaveProduct = () => {
       );
     },
     onError: () => {
-      toast.error("Ocurrió un error al guardar el producto.");
+      toast.error("OcurriÃ³ un error al guardar el producto.");
     },
   });
 };

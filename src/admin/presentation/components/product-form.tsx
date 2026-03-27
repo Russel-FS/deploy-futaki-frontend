@@ -11,6 +11,7 @@ import {
 import Image from "next/image";
 import { useCategories } from "../hooks/use-categories";
 import { Input, TextArea } from "@/shared/ui/input";
+import { Switch } from "@/shared/ui/switch";
 import { Button } from "@/shared/ui/button";
 import { toast } from "@/shared/ui/toast";
 import { useSaveProduct } from "../hooks/use-products";
@@ -27,6 +28,7 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
     price: initialData?.price?.toString() || "",
     stock: initialData?.stock?.toString() || "",
     categoryId: initialData?.categoryId || "",
+    isFeatured: initialData?.isFeatured || false,
   });
   const [specs, setSpecs] = useState<{ label: string; value: string }[]>(
     initialData?.specs || [],
@@ -216,6 +218,17 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
         }
         className="min-h-[100px]"
       />
+
+      <div className="flex items-center justify-between p-4 bg-system-gray-6/50 rounded-2xl border border-border/5">
+        <div>
+          <p className="text-[12px] font-semibold text-foreground">Destacar en Inicio</p>
+          <p className="text-[10px] text-secondary/40 font-medium">Priorizar este producto en el catálogo destacado de la Home.</p>
+        </div>
+        <Switch 
+          checked={formData.isFeatured} 
+          onChange={(val) => setFormData(prev => ({ ...prev, isFeatured: val }))} 
+        />
+      </div>
 
       {/* Especificaciones */}
       <div className="space-y-3 pt-2">

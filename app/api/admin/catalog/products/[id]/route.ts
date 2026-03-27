@@ -48,6 +48,7 @@ export async function PATCH(
     const product = await useCase.execute(id, body);
     return NextResponse.json(product);
   } catch (error: any) {
-    return NextResponse.json({ error: "Internal Error" }, { status: 500 });
+    console.error("Error:", error);
+    return NextResponse.json({ error: error.message || "Internal Error" }, { status: 500 });
   }
 }

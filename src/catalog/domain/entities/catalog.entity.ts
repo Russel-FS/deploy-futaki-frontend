@@ -3,6 +3,7 @@ export interface Category {
   name: string;
   description?: string | null;
   imageUrl?: string | null;
+  isFeatured: boolean;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -23,6 +24,7 @@ export interface Product {
   specs?: ProductSpec[] | any | null;
   categoryId: string;
   category?: Category;
+  isFeatured: boolean;
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;

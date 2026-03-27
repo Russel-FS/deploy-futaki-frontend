@@ -10,11 +10,28 @@ export class PrismaPublicCatalogRepository implements IPublicCatalogRepository {
     });
   }
 
+  async getFeaturedCategories(): Promise<Category[]> {
+    return prisma.category.findMany({
+      where: { isActive: true, isFeatured: true },
+      take: 10,
+      orderBy: { updatedAt: "desc" },
+    });
+  }
+
   async getPublicProducts(): Promise<Product[]> {
     return prisma.product.findMany({
       where: { isActive: true },
       include: { category: true },
       orderBy: { createdAt: "desc" },
+    });
+  }
+
+  async getFeaturedProducts(): Promise<Product[]> {
+    return prisma.product.findMany({
+      where: { isActive: true, isFeatured: true },
+      take: 10,
+      include: { category: true },
+      orderBy: { updatedAt: "desc" },
     });
   }
 

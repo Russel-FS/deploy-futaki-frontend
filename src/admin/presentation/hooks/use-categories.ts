@@ -6,6 +6,7 @@ export interface Category {
   name: string;
   description?: string;
   imageUrl?: string;
+  isFeatured: boolean;
   isActive: boolean;
 }
 
@@ -61,6 +62,34 @@ export const useToggleCategoryActive = () => {
   });
 };
 
+export const useToggleCategoryFeatured = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, isFeatured }: { id: string; isFeatured: boolean }) => {
+      const res = await fetch(`/api/admin/catalog/categories/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isFeatured }),
+      });
+      if (!res.ok) throw new Error();
+      return res.json();
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+      queryClient.invalidateQueries({ queryKey: ["featured-categories"] });
+      toast.success(
+        variables.isFeatured
+          ? "Categoría destacada correctamente"
+          : "Categoría quitada de destacados",
+      );
+    },
+    onError: () => {
+      toast.error("No se pudo actualizar el estado destacado");
+    },
+  });
+};
+
 export const useSaveCategory = () => {
   const queryClient = useQueryClient();
 
@@ -70,11 +99,13 @@ export const useSaveCategory = () => {
       name,
       description,
       imageUrl,
+      isFeatured,
     }: {
       id?: string;
       name: string;
       description: string;
       imageUrl?: string | null;
+      isFeatured?: boolean;
     }) => {
       const method = id ? "PUT" : "POST";
       const url = id
@@ -83,7 +114,7 @@ export const useSaveCategory = () => {
 
       const res = await fetch(url, {
         method,
-        body: JSON.stringify({ name, description, imageUrl }),
+        body: JSON.stringify({ name, description, imageUrl, isFeatured }),
         headers: { "Content-Type": "application/json" },
       });
 

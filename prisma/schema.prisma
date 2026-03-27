@@ -11,6 +11,7 @@ model Category {
   name        String
   description String?
   imageUrl    String?
+  isFeatured  Boolean   @default(false)
   isActive    Boolean   @default(true)
   products    Product[]
   createdAt   DateTime  @default(now())
@@ -25,6 +26,7 @@ model Product {
   stock       Int      @default(0)
   imageUrl    String?
   specs       Json?
+  isFeatured  Boolean  @default(false)
   isActive    Boolean  @default(true)
   categoryId  String
   category    Category @relation(fields: [categoryId], references: [id])

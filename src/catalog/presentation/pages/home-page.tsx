@@ -2,20 +2,20 @@
 
 import { Navbar } from "@/shared/ui/navbar";
 import { HeroCarousel } from "@/core/presentation/hero-carousel";
-import { ProductGrid } from "@/catalog/presentation/components/product-grid";
 import { BlogSection } from "@/blog/presentation/blog-section";
 import { Footer } from "@/core/presentation/footer";
-import { CategoryGrid } from "@/catalog/presentation/components/category-grid";
+import { FeaturedCategories } from "@/catalog/presentation/components/featured-categories";
+import { FeaturedProducts } from "@/catalog/presentation/components/featured-products";
 
 export const HomePageContent = () => {
   return (
     <main className="min-h-screen bg-background text-foreground">
       <Navbar />
       <HeroCarousel />
-      <CategoryGrid />
 
-      {/* Sección de Catálogo */}
-      <ProductGrid />
+      {/* Secciones Destacadas  */}
+      <FeaturedCategories />
+      <FeaturedProducts />
 
       {/* Sección de Blog/Contenido */}
       <BlogSection />

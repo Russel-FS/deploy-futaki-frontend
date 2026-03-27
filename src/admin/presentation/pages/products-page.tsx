@@ -7,11 +7,12 @@ import {
   Filter,
   ChevronLeft,
   ChevronRight,
+  Star,
 } from "lucide-react";
 import Image from "next/image";
 import { AdminModal } from "../components/admin-modal";
 import { ProductForm } from "../components/product-form";
-import { useProducts, useToggleProductActive } from "../hooks/use-products";
+import { useProducts, useToggleProductActive, useToggleProductFeatured } from "../hooks/use-products";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/shared/ui/button";
 import { ProductRowSkeleton } from "@/shared/ui/skeleton";
@@ -44,6 +45,7 @@ export const ProductsPageContent = () => {
   const totalPages = Math.ceil(total / 10);
 
   const toggleMutation = useToggleProductActive();
+  const toggleFeaturedMutation = useToggleProductFeatured();
 
   const handleOpenCreate = () => {
     setEditingProduct(null);
@@ -57,6 +59,10 @@ export const ProductsPageContent = () => {
 
   const handleToggleActive = (id: string, currentStatus: boolean) => {
     toggleMutation.mutate({ id, isActive: !currentStatus });
+  };
+
+  const handleToggleFeatured = (id: string, currentStatus: boolean) => {
+    toggleFeaturedMutation.mutate({ id, isFeatured: !currentStatus });
   };
 
   if (error) {
@@ -117,6 +123,7 @@ export const ProductsPageContent = () => {
                 <th className="px-8 py-3.5">Sección</th>
                 <th className="px-8 py-3.5 text-right">Precio</th>
                 <th className="px-8 py-3.5">Stock</th>
+                <th className="px-8 py-3.5">Destacado</th>
                 <th className="px-8 py-3.5 text-right">Acciones</th>
               </tr>
             </thead>
@@ -202,6 +209,18 @@ export const ProductsPageContent = () => {
                       </td>
                       <td className="px-8 py-4 text-right">
                         <div className="flex items-center justify-end gap-3">
+                          <button
+                            onClick={() => handleToggleFeatured(product.id, product.isFeatured)}
+                            disabled={toggleFeaturedMutation.isPending}
+                            className={cn(
+                              "p-2 rounded-full transition-all",
+                              product.isFeatured 
+                                ? "bg-yellow-50 text-yellow-500 shadow-sm" 
+                                : "text-secondary/20 hover:bg-system-gray-6 hover:text-secondary/40"
+                            )}
+                          >
+                            <Star size={16} fill={product.isFeatured ? "currentColor" : "none"} />
+                          </button>
                           <Switch
                             checked={product.isActive}
                             onChange={() =>

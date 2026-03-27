@@ -7,12 +7,14 @@ import {
   Image as ImageIcon,
   ChevronLeft,
   ChevronRight,
+  Star,
 } from "lucide-react";
 import { AdminModal } from "../components/admin-modal";
 import { CategoryForm } from "../components/category-form";
 import {
   useCategories,
   useToggleCategoryActive,
+  useToggleCategoryFeatured,
 } from "../hooks/use-categories";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
@@ -45,6 +47,7 @@ export const CategoriesPageContent = () => {
   const totalPages = Math.ceil(total / 10);
 
   const toggleMutation = useToggleCategoryActive();
+  const toggleFeaturedMutation = useToggleCategoryFeatured();
 
   const handleOpenCreate = () => {
     setEditingCategory(null);
@@ -58,6 +61,10 @@ export const CategoriesPageContent = () => {
 
   const handleToggleActive = (id: string, currentStatus: boolean) => {
     toggleMutation.mutate({ id, isActive: !currentStatus });
+  };
+
+  const handleToggleFeatured = (id: string, currentStatus: boolean) => {
+    toggleFeaturedMutation.mutate({ id, isFeatured: !currentStatus });
   };
 
   if (error) {
@@ -117,6 +124,7 @@ export const CategoriesPageContent = () => {
                 <th className="px-8 py-3.5">Imagen</th>
                 <th className="px-8 py-3.5">Sección</th>
                 <th className="px-8 py-3.5">Descripción</th>
+                <th className="px-8 py-3.5">Destacado</th>
                 <th className="px-8 py-3.5 text-right">Acciones</th>
               </tr>
             </thead>
@@ -175,6 +183,20 @@ export const CategoriesPageContent = () => {
                         <div className="text-secondary font-medium text-[12px] line-clamp-1 max-w-md opacity-50 italic">
                           {category.description || "Sin descripciÃ³n"}
                         </div>
+                      </td>
+                      <td className="px-8 py-4 text-center">
+                        <button
+                          onClick={() => handleToggleFeatured(category.id, category.isFeatured)}
+                          disabled={toggleFeaturedMutation.isPending}
+                          className={cn(
+                            "p-2 rounded-full transition-all",
+                            category.isFeatured 
+                              ? "bg-yellow-50 text-yellow-500 shadow-sm" 
+                              : "text-secondary/20 hover:bg-system-gray-6 hover:text-secondary/40"
+                          )}
+                        >
+                          <Star size={16} fill={category.isFeatured ? "currentColor" : "none"} />
+                        </button>
                       </td>
                       <td className="px-8 py-4 text-right">
                         <div className="flex items-center justify-end gap-3">
