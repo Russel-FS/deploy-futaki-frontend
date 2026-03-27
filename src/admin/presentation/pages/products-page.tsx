@@ -164,7 +164,7 @@ export const ProductsPageContent = () => {
         />
       </div>
 
-      <div className="bg-white rounded-4xl border border-border/10 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-500">
+      <div className="bg-white rounded-4xl border border-border/10 overflow-hidden   transition-shadow duration-500">
         <div className="p-5 border-b border-border/10 bg-white flex flex-col md:flex-row items-center gap-4">
           <div className="relative flex-1 group w-full">
             <Search
