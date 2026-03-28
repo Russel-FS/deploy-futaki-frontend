@@ -28,8 +28,7 @@ export const FeaturedProducts: React.FC = () => {
               <span className="text-secondary/70">de esta semana.</span>
             </h2>
             <p className="text-xl text-secondary font-medium">
-              Equipos que definen el futuro. Diseño, rendimiento y exclusividad
-              en cada detalle.
+              Encuentra los mejores productos de esta semana.
             </p>
           </div>
           <Link

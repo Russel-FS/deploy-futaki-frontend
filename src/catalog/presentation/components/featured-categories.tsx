@@ -15,7 +15,7 @@ export const FeaturedCategories: React.FC = () => {
   if (!isLoading && categories.length === 0) return null;
 
   return (
-    <section className="py-24 bg-[#fbfbfd] overflow-hidden">
+    <section className="py-24 bg-system-gray-6  overflow-hidden">
       <Container>
         <div className="flex items-end justify-between mb-12">
           <div className="max-w-xl">
@@ -55,10 +55,10 @@ export const FeaturedCategories: React.FC = () => {
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.1, duration: 0.8 }}
                     viewport={{ once: true }}
-                    className="min-w-[280px] md:min-w-[320px] snap-start group"
+                    className="min-w-[280px] md:min-w-[320px] snap-start group "
                   >
                     <Link href={`/catalog?categoryId=${category.id}`}>
-                      <div className="relative aspect-4/5 rounded-[2.5rem] overflow-hidden bg-white shadow-sm border border-border/10">
+                      <div className="relative aspect-4/5 h-100 rounded-[2.5rem] overflow-hidden bg-white shadow-sm border border-border/10">
                         {category.imageUrl ? (
                           <img
                             src={category.imageUrl}
