@@ -4,7 +4,14 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
-import { LayoutDashboard, Package, Tags, LogOut, Image } from "lucide-react";
+import {
+  LayoutDashboard,
+  Package,
+  Tags,
+  LogOut,
+  Image,
+  BookOpen,
+} from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import FutakiLogo from "@/shared/ui/futaki-logo";
 import { motion } from "framer-motion";
@@ -14,6 +21,7 @@ const menuItems = [
   { icon: Image, label: "Banner Principal", href: "/admin/hero" },
   { icon: Package, label: "Productos", href: "/admin/products" },
   { icon: Tags, label: "Categorías", href: "/admin/categories" },
+  { icon: BookOpen, label: "Blog", href: "/admin/blog" },
 ];
 
 const tooltipVariants = {
@@ -32,7 +40,7 @@ export const AdminSidebar = () => {
 
   return (
     <aside className="w-[80px] h-[calc(100vh-2rem)] sticky top-4 z-40 my-4 ml-4 hidden md:flex flex-col">
-      <div className="flex-1 w-full bg-white/80 backdrop-blur-xl border border-border/10 rounded-3xl shadow-xl shadow-black/5 flex flex-col py-6 items-center">
+      <div className="flex-1 w-full bg-white flex flex-col py-6 items-center">
         {/* Logo Section */}
         <div className="mb-10 w-full px-3">
           <motion.div
@@ -102,7 +110,7 @@ export const AdminSidebar = () => {
                 <motion.div
                   variants={tooltipVariants}
                   transition={tooltipTransition}
-                  className="absolute left-[110%] top-1/2 -translate-y-1/2 px-3 py-1.5 bg-black/80 backdrop-blur-md rounded-xl text-white text-[12px] font-bold whitespace-nowrap z-50 shadow-xl pointer-events-none flex items-center gap-2"
+                  className="absolute left-[110%] top-1/2 -translate-y-1/2 px-3 py-1.5 bg-black/70 backdrop-blur-md rounded-xl text-white text-[12px] font-bold whitespace-nowrap z-50 shadow-xl pointer-events-none flex items-center gap-2"
                 >
                   {item.label}
                   {isActive && (

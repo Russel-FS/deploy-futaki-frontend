@@ -31,16 +31,27 @@ export const BlogAdminPage = () => {
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<BlogPost | null>(null);
 
+  /**
+   * Maneja la edición de un artículo
+   * @param post Artículo a editar
+   */
   const handleEdit = (post: BlogPost) => {
     setEditing(post);
     setShowForm(true);
   };
 
+  /**
+   * Maneja la creación de un nuevo artículo
+   */
   const handleCreate = () => {
     setEditing(null);
     setShowForm(true);
   };
 
+  /**
+   * Maneja el envío del formulario
+   * @param data Datos del formulario
+   */
   const handleSubmit = (data: Partial<BlogPost>) => {
     if (editing) {
       updateMutation.mutate({ id: editing.id, ...data } as any, {
@@ -56,6 +67,10 @@ export const BlogAdminPage = () => {
     }
   };
 
+  /**
+   * Maneja la eliminación de un artículo
+   * @param id ID del artículo a eliminar
+   */
   const handleDelete = (id: string) => {
     if (confirm("¿Eliminar este artículo permanentemente?")) {
       deleteMutation.mutate(id);
