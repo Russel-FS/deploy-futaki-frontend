@@ -79,3 +79,26 @@ export const usePublicSlides = () => {
       }),
   });
 };
+
+/**
+ * Hook para obtener productos filtrados
+ */
+export const useFilteredProducts = (filters: any) => {
+  return useQuery({
+    queryKey: [...PUBLIC_QUERY_KEYS.PRODUCTS.ALL, filters],
+    queryFn: () => {
+      const params = new URLSearchParams();
+      if (filters.q) params.append("q", filters.q);
+      if (filters.categoryId) params.append("categoryId", filters.categoryId);
+      if (filters.minPrice) params.append("minPrice", filters.minPrice.toString());
+      if (filters.maxPrice) params.append("maxPrice", filters.maxPrice.toString());
+      if (filters.sort) params.append("sort", filters.sort);
+
+      return fetch(`/api/catalog/products?${params.toString()}`).then((res) => {
+        if (!res.ok) throw new Error("Error al buscar productos");
+        return res.json();
+      });
+    },
+    placeholderData: keepPreviousData,
+  });
+};

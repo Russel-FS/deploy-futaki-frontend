@@ -91,7 +91,7 @@ export const HeroCarouselPage = () => {
       },
       onError: () => {
         setIsConfirmingDelete(false);
-      }
+      },
     });
   };
 
@@ -163,7 +163,7 @@ export const HeroCarouselPage = () => {
               )}
             </div>
 
-            <div className="relative group aspect-21/9 w-full rounded-[2.5rem] overflow-hidden bg-system-gray-6 shadow-2xl border border-border/10 ring-1 ring-black/5">
+            <div className="relative group aspect-21/9 w-full rounded-[2.5rem] overflow-hidden border border-border/10 ring-1 ring-black/5">
               <AnimatePresence mode="wait">
                 {canvasData ? (
                   <motion.div

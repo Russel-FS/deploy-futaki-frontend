@@ -57,7 +57,7 @@ export const FeaturedCategories: React.FC = () => {
                     viewport={{ once: true }}
                     className="min-w-[280px] md:min-w-[320px] snap-start group"
                   >
-                    <Link href={`/catalog?category=${category.id}`}>
+                    <Link href={`/catalog?categoryId=${category.id}`}>
                       <div className="relative aspect-4/5 rounded-[2.5rem] overflow-hidden bg-white shadow-sm border border-border/10">
                         {category.imageUrl ? (
                           <img

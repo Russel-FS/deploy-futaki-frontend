@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { WhatsAppIcon } from "@/shared/ui/whatsapp-icon";
 import { COMPANY_CONFIG } from "@/core/config/company.config";
 import Link from "next/link";
 import { Product } from "@/catalog/domain/entities/catalog.entity";
@@ -15,16 +14,20 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const whatsappNumber = COMPANY_CONFIG.contact.whatsapp;
   const message = encodeURIComponent(
-    COMPANY_CONFIG.whatsappMessages.productQuery(product.name, product.price.toString()),
+    COMPANY_CONFIG.whatsappMessages.productQuery(
+      product.name,
+      product.price.toString(),
+    ),
   );
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 
   return (
     <motion.div
+      layout
       initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      className="group bg-background rounded-3xl p-4 transition-all duration-300 hover:shadow-xl border border-transparent hover:border-border/40 flex flex-col h-full"
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="group bg-background rounded-3xl p-4 transition-colors duration-300 hover:shadow-xl border border-transparent hover:border-border/40 flex flex-col h-full"
     >
       <Link
         href={`/products/${product.id}`}
@@ -60,7 +63,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {product.name}
             </h3>
           </Link>
-          <span className="text-sm font-black">${product.price.toLocaleString()}</span>
+          <span className="text-sm font-black">
+            ${product.price.toLocaleString()}
+          </span>
         </div>
 
         <p className="text-xs text-secondary font-medium mb-4 line-clamp-2">

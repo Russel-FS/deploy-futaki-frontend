@@ -1,19 +1,41 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export const SearchBar: React.FC = () => {
+  const router = useRouter();
+  const [value, setValue] = useState("");
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (value.trim()) {
+      router.push(`/catalog?q=${encodeURIComponent(value.trim())}`);
+      setValue("");
+    }
+  };
+
   return (
     <div className="flex-1 max-w-sm hidden md:block">
-      <div className="relative group">
+      <form onSubmit={handleSearch} className="relative group">
         <input
           type="text"
-          placeholder="Buscar..."
-          className="w-full bg-accent/50 dark:bg-accent/20 border border-transparent focus:border-primary/30 focus:ring-4 focus:ring-primary/10 h-9 px-10 rounded-full text-xs transition-all outline-none"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Buscar lo que necesites..."
+          className="w-full bg-system-gray-6 border border-transparent focus:bg-system-gray-6/50 focus:border-primary h-10 px-10 rounded-full text-xs transition-all outline-none italic font-medium"
         />
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-secondary transition-colors" />
-      </div>
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary transition-colors group-hover:text-primary" />
+        {value && (
+          <button
+            type="submit"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-black uppercase text-primary hover:opacity-80 transition-opacity"
+          >
+            Enter
+          </button>
+        )}
+      </form>
     </div>
   );
 };

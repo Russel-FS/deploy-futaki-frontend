@@ -1,4 +1,4 @@
-import { IPublicCatalogRepository } from "@/catalog/domain/repositories/public-catalog.repository";
+import { IPublicCatalogRepository, ProductFilters } from "@/catalog/domain/repositories/public-catalog.repository";
 import { Product, Category } from "@/catalog/domain/entities/catalog.entity";
 
 export class GetPublicCategoriesUseCase {
@@ -33,6 +33,17 @@ export class GetPublicProductsByCategoryUseCase {
   constructor(private catalogRepository: IPublicCatalogRepository) {}
   async execute(categoryId: string): Promise<Product[]> {
     return this.catalogRepository.getPublicProductsByCategory(categoryId);
+  }
+}
+
+/**
+ * Caso de uso para obtener productos filtrados
+ */
+export class GetFilteredProductsUseCase {
+  constructor(private repository: IPublicCatalogRepository) {}
+
+  async execute(filters: ProductFilters): Promise<Product[]> {
+    return this.repository.getFilteredProducts(filters);
   }
 }
 

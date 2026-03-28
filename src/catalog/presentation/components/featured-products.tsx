@@ -5,6 +5,8 @@ import { Container } from "@/shared/ui/container";
 import { motion } from "framer-motion";
 import { useFeaturedProducts } from "../hooks/use-public-catalog";
 import { ProductCard } from "./product-card";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 export const FeaturedProducts: React.FC = () => {
   const { data, isLoading } = useFeaturedProducts();
@@ -16,18 +18,30 @@ export const FeaturedProducts: React.FC = () => {
   return (
     <section className="py-24 bg-white">
       <Container>
-        <div className="max-w-3xl mb-16">
-          <span className="text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">
-            SelecciÃ³n Futeki
-          </span>
-          <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-foreground mb-6 uppercase leading-none">
-            Los Imprescindibles <br />
-            <span className="text-secondary/70">de esta semana.</span>
-          </h2>
-          <p className="text-xl text-secondary font-medium">
-            Equipos que definen el futuro. DiseÃ±o, rendimiento y exclusividad
-            en cada detalle.
-          </p>
+        <div className="flex items-end justify-between mb-16">
+          <div className="max-w-3xl">
+            <span className="text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">
+              Selección Futeki
+            </span>
+            <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-foreground mb-6 uppercase leading-none">
+              Los Imprescindibles <br />
+              <span className="text-secondary/70">de esta semana.</span>
+            </h2>
+            <p className="text-xl text-secondary font-medium">
+              Equipos que definen el futuro. Diseño, rendimiento y exclusividad
+              en cada detalle.
+            </p>
+          </div>
+          <Link
+            href="/catalog"
+            className="hidden md:flex items-center gap-2 text-primary font-bold hover:underline group"
+          >
+            Ver Todo{" "}
+            <ChevronRight
+              size={20}
+              className="group-hover:translate-x-1 transition-transform"
+            />
+          </Link>
         </div>
 
         {isLoading ? (

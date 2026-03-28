@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaPublicCatalogRepository } from "@/catalog/infrastructure/repositories/prisma-public-catalog.repository";
 import {
-  GetPublicProductsUseCase,
-  GetPublicProductsByCategoryUseCase,
+  GetFilteredProductsUseCase,
 } from "@/catalog/application/use-cases/public/public.use-cases";
 
 const publicRepo = new PrismaPublicCatalogRepository();
@@ -10,16 +9,18 @@ const publicRepo = new PrismaPublicCatalogRepository();
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const categoryId = searchParams.get("categoryId");
+    
+    const filters = {
+      q: searchParams.get("q") || undefined,
+      categoryId: searchParams.get("categoryId") || undefined,
+      minPrice: searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined,
+      maxPrice: searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined,
+      sort: (searchParams.get("sort") as any) || undefined,
+    };
 
-    if (categoryId) {
-      const useCase = new GetPublicProductsByCategoryUseCase(publicRepo);
-      const products = await useCase.execute(categoryId);
-      return NextResponse.json(products);
-    }
-
-    const useCase = new GetPublicProductsUseCase(publicRepo);
-    const products = await useCase.execute();
+    const useCase = new GetFilteredProductsUseCase(publicRepo);
+    const products = await useCase.execute(filters);
+    
     return NextResponse.json(products);
   } catch (error) {
     console.error("Error al obtener los productos (Público):", error);
