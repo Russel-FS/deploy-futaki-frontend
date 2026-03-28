@@ -4,7 +4,7 @@ import React from "react";
 import { Package, Tags, Users, ArrowUpRight, ImageOff } from "lucide-react";
 import { useAdminStats } from "../hooks/use-admin-stats";
 import { motion, Variants } from "framer-motion";
-import { CategoryChart } from "../components/dashboard/category-chart";
+import { CategoryChart } from "../components/category-chart";
 
 const container: Variants = {
   hidden: { opacity: 0 },
