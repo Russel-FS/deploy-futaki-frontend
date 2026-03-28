@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { BlogForm } from "@/admin/presentation/components/blog-form";
+import { ConfirmDialog } from "@/admin/presentation/components/confirm-dialog";
 import {
   useAdminBlogPosts,
   useCreateBlogPost,
@@ -30,6 +31,7 @@ export const BlogAdminPage = () => {
 
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState<BlogPost | null>(null);
+  const [confirmTarget, setConfirmTarget] = useState<string | null>(null);
 
   /**
    * Maneja la edición de un artículo
@@ -72,13 +74,23 @@ export const BlogAdminPage = () => {
    * @param id ID del artículo a eliminar
    */
   const handleDelete = (id: string) => {
-    if (confirm("¿Eliminar este artículo permanentemente?")) {
-      deleteMutation.mutate(id);
-    }
+    setConfirmTarget(id);
   };
 
   return (
     <div className="max-w-5xl mx-auto">
+      <ConfirmDialog
+        open={!!confirmTarget}
+        title="¿Eliminar este artículo?"
+        description="Esta acción es permanente y no se puede deshacer."
+        confirmLabel="Eliminar"
+        cancelLabel="Cancelar"
+        variant="danger"
+        onConfirm={() => {
+          if (confirmTarget) deleteMutation.mutate(confirmTarget);
+        }}
+        onCancel={() => setConfirmTarget(null)}
+      />
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
