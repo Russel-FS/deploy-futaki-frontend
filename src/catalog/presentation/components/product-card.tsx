@@ -27,7 +27,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="group bg-background rounded-3xl p-4 transition-colors duration-300 hover:shadow-xl border border-transparent hover:border-border/40 flex flex-col h-full"
+      className="group rounded-3xl p-4 bg-system-gray-6 transition-colors duration-300 border border-transparent hover:border-border/40 flex flex-col h-full"
     >
       <Link
         href={`/products/${product.id}`}
@@ -90,7 +90,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-[11px] font-bold border border-border/60 hover:border-primary hover:bg-primary hover:text-white transition-all duration-300"
+            className="flex items-center bg-white justify-center gap-2 w-full py-3 rounded-full text-[11px] font-bold border border-border/60 hover:border-primary hover:bg-primary hover:text-white transition-all duration-300"
           >
             Consultar disponibilidad
           </a>

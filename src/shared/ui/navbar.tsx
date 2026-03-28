@@ -37,10 +37,7 @@ export const Navbar: React.FC = () => {
               >
                 Tienda
               </Link>
-              <Link
-                href="#blog"
-                className="hover:text-primary transition-colors"
-              >
+              <Link href="/blog" className="hover:text-primary transition-colors">
                 Blog
               </Link>
             </nav>
@@ -78,7 +75,7 @@ export const Navbar: React.FC = () => {
                     Tienda
                   </Link>
                   <Link
-                    href="#blog"
+                    href="/blog"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="hover:text-primary transition-colors"
                   >
