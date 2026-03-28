@@ -1,14 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import {
-  Upload,
-  X,
-  Package,
-  Loader2,
-  Trash2,
-  FileText,
-} from "lucide-react";
+import { Upload, X, Package, Loader2, Trash2, FileText } from "lucide-react";
 import Image from "next/image";
 import { useCategories } from "../hooks/use-categories";
 import { Input, TextArea } from "@/shared/ui/input";
@@ -93,7 +86,7 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     let imageUrl = previewUrl;
 
     if (selectedFile) {
@@ -117,10 +110,13 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
       const body = new FormData();
       body.append("file", selectedPdf);
       try {
-        const uploadRes = await fetch("/api/admin/catalog/products/upload-document", {
-          method: "POST",
-          body,
-        });
+        const uploadRes = await fetch(
+          "/api/admin/catalog/products/upload-document",
+          {
+            method: "POST",
+            body,
+          },
+        );
         const uploadData = await uploadRes.json();
         pdfUrl = uploadData.url;
       } catch (error) {
@@ -129,17 +125,20 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
       }
     }
 
-    mutation.mutate({
-      id: initialData?.id,
-      ...formData,
-      price: parseFloat(formData.price),
-      stock: parseInt(formData.stock),
-      imageUrl,
-      pdfUrl,
-      specs,
-    }, {
-      onSuccess: () => onSuccess()
-    });
+    mutation.mutate(
+      {
+        id: initialData?.id,
+        ...formData,
+        price: parseFloat(formData.price),
+        stock: parseInt(formData.stock),
+        imageUrl,
+        pdfUrl,
+        specs,
+      },
+      {
+        onSuccess: () => onSuccess(),
+      },
+    );
   };
 
   const isSubmitting = mutation.isPending;
@@ -256,12 +255,18 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
 
       <div className="flex items-center justify-between p-4 bg-system-gray-6/50 rounded-2xl border border-border/5">
         <div>
-          <p className="text-[12px] font-semibold text-foreground">Destacar en Inicio</p>
-          <p className="text-[10px] text-secondary/70 font-medium">Priorizar este producto en el catálogo destacado de la Home.</p>
+          <p className="text-[12px] font-semibold text-foreground">
+            Destacar en Inicio
+          </p>
+          <p className="text-[10px] text-secondary/70 font-medium">
+            Priorizar este producto en el catálogo destacado de la Home.
+          </p>
         </div>
-        <Switch 
-          checked={formData.isFeatured} 
-          onChange={(val) => setFormData(prev => ({ ...prev, isFeatured: val }))} 
+        <Switch
+          checked={formData.isFeatured}
+          onChange={(val) =>
+            setFormData((prev) => ({ ...prev, isFeatured: val }))
+          }
         />
       </div>
 
@@ -276,13 +281,21 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
           </div>
           <div className="flex-1 min-w-0">
             {selectedPdf ? (
-              <p className="text-[13px] font-medium truncate">{selectedPdf.name}</p>
+              <p className="text-[13px] font-medium truncate">
+                {selectedPdf.name}
+              </p>
             ) : currentPdfUrl ? (
-              <p className="text-[13px] font-medium truncate text-primary/80">Archivo cargado correctamente</p>
+              <p className="text-[13px] font-medium truncate text-primary/80">
+                Archivo cargado correctamente
+              </p>
             ) : (
-              <p className="text-[13px] font-medium text-secondary/40 italic">Ningún documento PDF seleccionado</p>
+              <p className="text-[13px] font-medium text-secondary/40 italic">
+                Ningún documento PDF seleccionado
+              </p>
             )}
-            <p className="text-[10px] text-secondary/60">Solo archivos PDF (Máx. 10MB)</p>
+            <p className="text-[10px] text-secondary/60">
+              Solo archivos PDF (Máx. 10MB)
+            </p>
           </div>
           <div className="flex items-center gap-2">
             {(selectedPdf || currentPdfUrl) && (
@@ -332,7 +345,7 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
               className="flex gap-2 items-center group/spec animate-in fade-in slide-in-from-right-1"
             >
               <input
-                placeholder="Atributo"
+                placeholder="ej. Procesador"
                 value={spec.label}
                 onChange={(e) =>
                   handleSpecChange(index, "label", e.target.value)
@@ -340,7 +353,7 @@ export const ProductForm = ({ onSuccess, initialData }: ProductFormProps) => {
                 className="flex-1 bg-system-gray-6  border border-border/10 rounded-xl py-2 px-3 text-[12px] font-medium focus:ring-1 focus:ring-primary/10 outline-none"
               />
               <input
-                placeholder="Valor"
+                placeholder="AMD Ryzen 5 5600X"
                 value={spec.value}
                 onChange={(e) =>
                   handleSpecChange(index, "value", e.target.value)
