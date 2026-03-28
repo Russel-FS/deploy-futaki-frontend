@@ -23,7 +23,7 @@ export const FeaturedProducts: React.FC = () => {
             <span className="text-primary text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">
               Selección Futeki
             </span>
-            <h2 className="text-5xl md:text-6xl font-black tracking-tighter text-foreground mb-6 uppercase leading-none">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter text-foreground mb-6 uppercase leading-none">
               Los Imprescindibles <br />
               <span className="text-secondary/70">de esta semana.</span>
             </h2>
