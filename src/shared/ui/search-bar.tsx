@@ -3,8 +3,13 @@
 import React, { useState } from "react";
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/shared/lib/utils";
 
-export const SearchBar: React.FC = () => {
+interface SearchBarProps {
+  className?: string;
+}
+
+export const SearchBar: React.FC<SearchBarProps> = ({ className }) => {
   const router = useRouter();
   const [value, setValue] = useState("");
 
@@ -17,7 +22,7 @@ export const SearchBar: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 max-w-sm hidden md:block">
+    <div className={cn("w-full", className)}>
       <form onSubmit={handleSearch} className="relative group">
         <input
           type="text"
