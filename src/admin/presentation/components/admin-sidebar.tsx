@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { LayoutDashboard, Package, Tags, LogOut, Image } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
 import FutakiLogo from "@/shared/ui/futaki-logo";
@@ -30,7 +31,7 @@ export const AdminSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <aside className="w-[88px] h-[calc(100vh-2rem)] sticky top-4 z-40 my-4 ml-4 hidden md:flex flex-col">
+    <aside className="w-[80px] h-[calc(100vh-2rem)] sticky top-4 z-40 my-4 ml-4 hidden md:flex flex-col">
       <div className="flex-1 w-full bg-white/80 backdrop-blur-xl border border-border/10 rounded-3xl shadow-xl shadow-black/5 flex flex-col py-6 items-center">
         {/* Logo Section */}
         <div className="mb-10 w-full px-3">
@@ -120,15 +121,15 @@ export const AdminSidebar = () => {
             whileHover="hover"
             className="relative flex justify-center w-full group"
           >
-            <Link
-              href="/"
-              className="flex items-center justify-center p-3.5 rounded-2xl transition-all w-full outline-none bg-red-500/5 group-hover:bg-red-500/10 text-red-500/60 group-hover:text-red-500"
+            <button
+              onClick={() => signOut({ callbackUrl: "/admin/login" })}
+              className="flex items-center justify-center p-3.5 rounded-2xl transition-all w-full outline-none bg-red-500/5 group-hover:bg-red-500/10 text-red-500/60 group-hover:text-red-500 cursor-pointer"
             >
               <LogOut
                 size={22}
                 className="relative z-10 transition-transform duration-300 group-hover:-translate-x-0.5"
               />
-            </Link>
+            </button>
 
             <motion.div
               variants={tooltipVariants}
